@@ -57,9 +57,17 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _gameboard = __webpack_require__(/*! ./gameboard */ 172);
+	var _people = __webpack_require__(/*! ./people */ 172);
 	
-	var _gameboard2 = _interopRequireDefault(_gameboard);
+	var _people2 = _interopRequireDefault(_people);
+	
+	var _draggableName = __webpack_require__(/*! ./draggableName */ 173);
+	
+	var _draggableName2 = _interopRequireDefault(_draggableName);
+	
+	var _picture = __webpack_require__(/*! ./picture */ 175);
+	
+	var _picture2 = _interopRequireDefault(_picture);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -69,22 +77,29 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	// import styles from '../styles.css';
+	
+	var path = './assets/';
+	
+	var imgStyle = {
+	  maxWidth: '50px',
+	  maxHeight: '50px'
+	};
+	
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
 	
-	  function App() {
+	  function App(props) {
 	    _classCallCheck(this, App);
 	
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	
+	    console.log(_this.props.people[0].name); //should be bill
+	    return _this;
 	  }
 	
 	  _createClass(App, [{
 	    key: 'render',
-	
-	    // constructor(){
-	    //   super()
-	    // }
-	
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
@@ -92,9 +107,23 @@
 	        _react2.default.createElement(
 	          'p',
 	          null,
-	          'Sup'
+	          ' sup '
 	        ),
-	        _react2.default.createElement(_gameboard2.default, null)
+	        this.props.people.map(function (person, i) {
+	          return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(_draggableName2.default, { key: i, name: person.name })
+	          );
+	        }),
+	        this.props.people.map(function (person, i) {
+	          return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement('img', { key: i, style: imgStyle, src: path + person.image })
+	          );
+	        }),
+	        _react2.default.createElement(_picture2.default, null)
 	      );
 	    }
 	  }]);
@@ -102,7 +131,7 @@
 	  return App;
 	}(_react2.default.Component);
 	
-	(0, _reactDom.render)(_react2.default.createElement(App, null), document.getElementById('app'));
+	(0, _reactDom.render)(_react2.default.createElement(App, { people: _people2.default }), document.getElementById('app'));
 
 /***/ },
 /* 1 */
@@ -21986,9 +22015,28 @@
 
 /***/ },
 /* 172 */
-/*!*************************************!*\
-  !*** ./src/client/app/gameboard.js ***!
-  \*************************************/
+/*!**********************************!*\
+  !*** ./src/client/app/people.js ***!
+  \**********************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = [{
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}];
+
+/***/ },
+/* 173 */
+/*!*****************************************!*\
+  !*** ./src/client/app/draggableName.js ***!
+  \*****************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21999,7 +22047,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDraggable = __webpack_require__(/*! react-draggable */ 173);
+	var _reactDraggable = __webpack_require__(/*! react-draggable */ 174);
 	
 	var _reactDraggable2 = _interopRequireDefault(_reactDraggable);
 	
@@ -22011,16 +22059,16 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var GameBoard = function (_React$Component) {
-	  _inherits(GameBoard, _React$Component);
+	var DraggableName = function (_React$Component) {
+	  _inherits(DraggableName, _React$Component);
 	
-	  function GameBoard() {
-	    _classCallCheck(this, GameBoard);
+	  function DraggableName(props) {
+	    _classCallCheck(this, DraggableName);
 	
-	    return _possibleConstructorReturn(this, (GameBoard.__proto__ || Object.getPrototypeOf(GameBoard)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (DraggableName.__proto__ || Object.getPrototypeOf(DraggableName)).call(this, props));
 	  }
 	
-	  _createClass(GameBoard, [{
+	  _createClass(DraggableName, [{
 	    key: 'eventLogger',
 	    value: function eventLogger(e, data) {
 	      console.log('Event: ', event);
@@ -22047,25 +22095,20 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'handle' },
-	            'Drag from here'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            'This readme is really dragging on...'
+	            this.props.name
 	          )
 	        )
 	      );
 	    }
 	  }]);
 	
-	  return GameBoard;
+	  return DraggableName;
 	}(_react2.default.Component);
 	
-	module.exports = GameBoard;
+	module.exports = DraggableName;
 
 /***/ },
-/* 173 */
+/* 174 */
 /*!***************************************************!*\
   !*** ./~/react-draggable/dist/react-draggable.js ***!
   \***************************************************/
@@ -23618,6 +23661,54 @@
 	});
 	;
 	//# sourceMappingURL=react-draggable.js.map
+
+/***/ },
+/* 175 */
+/*!***********************************!*\
+  !*** ./src/client/app/picture.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Picture = function (_React$Component) {
+	  _inherits(Picture, _React$Component);
+	
+	  function Picture() {
+	    _classCallCheck(this, Picture);
+	
+	    return _possibleConstructorReturn(this, (Picture.__proto__ || Object.getPrototypeOf(Picture)).apply(this, arguments));
+	  }
+	
+	  _createClass(Picture, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        ' yooo '
+	      );
+	    }
+	  }]);
+	
+	  return Picture;
+	}(_react2.default.Component);
+	
+	module.exports = Picture;
 
 /***/ }
 /******/ ]);
