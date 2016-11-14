@@ -1,9 +1,19 @@
 import React from 'react';
 import {render} from 'react-dom';
+import GameBoard from './gameboard';
 
 class App extends React.Component {
+  // constructor(){
+  //   super()
+  // }
+
   render() {
-    return <p> yo </p>;
+    return (
+      <div> 
+        <p>Sup</p>
+        <GameBoard/>
+      </div>
+      );
   }
 }
 
