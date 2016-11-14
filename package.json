@@ -2,6 +2,10 @@
   "name": "name-game",
   "version": "1.0.0",
   "description": "Learn everyones names on your floor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BillZito/name-game.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -8,8 +8,8 @@ import Picture from './picture';
 var path = './assets/';
 
 const imgStyle = {
-  maxWidth: '50px',
-  maxHeight: '50px'
+  maxWidth: '200px',
+  maxHeight: '200px'
 };
 
 class App extends React.Component {
