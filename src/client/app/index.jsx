@@ -7,10 +7,31 @@ import Picture from './picture';
 
 var path = './assets/';
 
-const imgStyle = {
-  maxWidth: '200px',
-  maxHeight: '200px'
+const outerBoxStyle = {
+  display: 'flex',
+  flexDirection: 'row'
 };
+
+const imgStyle = {
+  height: '100px',
+  width: '100px'
+};
+
+const imgBoxStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  flexDirection: 'row'
+};
+
+const leftColStyle = {
+  dispaly: 'flex',
+  flexDirection: 'row',
+  width: '100px'
+};
+
+// const nameStyle = {
+//   margin: '2px'
+// };
 
 class App extends React.Component {
   constructor(props){
@@ -20,27 +41,30 @@ class App extends React.Component {
 
   render() {
     return (
-      <div> 
-        <p> sup </p>
-        {
-          this.props.people.map((person, i)=> {
-            return (
-              <div>
+      <div>
+        <p> Points </p>
+        <div className="outerBox" style={outerBoxStyle}> 
+          <div className="leftColumn" style={leftColStyle}>
+          {
+            this.props.people.map((person, i)=> {
+              return (
                 <DraggableName key={i} name={person.name}/>
-              </div>
-            );
-          })
-        }
-        {
-          this.props.people.map((person, i) => {
-            return (
-              <div>
+              );
+            })
+          }
+          </div>
+          <div className="imgBox" style={imgBoxStyle}>
+          {
+            this.props.people.map((person, i) => {
+              return (
                 <img key={i} style={imgStyle} src={path + person.image}/>
-              </div>
-            );
-          })
-        }
-        <Picture/>
+              );
+            })
+          }
+          </div>
+          <Picture/>
+
+        </div>
       </div>
       );
   }

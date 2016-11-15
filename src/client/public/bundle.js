@@ -81,10 +81,31 @@
 	
 	var path = './assets/';
 	
-	var imgStyle = {
-	  maxWidth: '200px',
-	  maxHeight: '200px'
+	var outerBoxStyle = {
+	  display: 'flex',
+	  flexDirection: 'row'
 	};
+	
+	var imgStyle = {
+	  height: '100px',
+	  width: '100px'
+	};
+	
+	var imgBoxStyle = {
+	  display: 'flex',
+	  justifyContent: 'center',
+	  flexDirection: 'row'
+	};
+	
+	var leftColStyle = {
+	  dispaly: 'flex',
+	  flexDirection: 'row',
+	  width: '100px'
+	};
+	
+	// const nameStyle = {
+	//   margin: '2px'
+	// };
 	
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
@@ -107,23 +128,27 @@
 	        _react2.default.createElement(
 	          'p',
 	          null,
-	          ' sup '
+	          ' Points '
 	        ),
-	        this.props.people.map(function (person, i) {
-	          return _react2.default.createElement(
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'outerBox', style: outerBoxStyle },
+	          _react2.default.createElement(
 	            'div',
-	            null,
-	            _react2.default.createElement(_draggableName2.default, { key: i, name: person.name })
-	          );
-	        }),
-	        this.props.people.map(function (person, i) {
-	          return _react2.default.createElement(
+	            { className: 'leftColumn', style: leftColStyle },
+	            this.props.people.map(function (person, i) {
+	              return _react2.default.createElement(_draggableName2.default, { key: i, name: person.name });
+	            })
+	          ),
+	          _react2.default.createElement(
 	            'div',
-	            null,
-	            _react2.default.createElement('img', { key: i, style: imgStyle, src: path + person.image })
-	          );
-	        }),
-	        _react2.default.createElement(_picture2.default, null)
+	            { className: 'imgBox', style: imgBoxStyle },
+	            this.props.people.map(function (person, i) {
+	              return _react2.default.createElement('img', { key: i, style: imgStyle, src: path + person.image });
+	            })
+	          ),
+	          _react2.default.createElement(_picture2.default, null)
+	        )
 	      );
 	    }
 	  }]);
@@ -22024,6 +22049,11 @@
 	
 	module.exports = [{
 	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
 	  'image': 'bill1.jpg'
 	}, { 'name': 'Bill 2',
 	  'image': 'bill2.jpg'
