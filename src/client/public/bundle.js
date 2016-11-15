@@ -65,10 +65,6 @@
 	
 	var _draggableName2 = _interopRequireDefault(_draggableName);
 	
-	var _picture = __webpack_require__(/*! ./picture */ 175);
-	
-	var _picture2 = _interopRequireDefault(_picture);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -77,35 +73,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	// import Picture from './picture';
 	// import styles from '../styles.css';
 	
 	var path = './assets/';
-	
-	var outerBoxStyle = {
-	  display: 'flex',
-	  flexDirection: 'row'
-	};
-	
-	var imgStyle = {
-	  height: '100px',
-	  width: '100px'
-	};
-	
-	var imgBoxStyle = {
-	  display: 'flex',
-	  justifyContent: 'center',
-	  flexDirection: 'row'
-	};
-	
-	var leftColStyle = {
-	  dispaly: 'flex',
-	  flexDirection: 'row',
-	  width: '100px'
-	};
-	
-	// const nameStyle = {
-	//   margin: '2px'
-	// };
 	
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
@@ -115,16 +86,48 @@
 	
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
-	    console.log(_this.props.people[0].name); //should be bill
+	    var allNames = {};
+	    props.people.forEach(function (person) {
+	      allNames[person.name] = false;
+	    });
+	    console.log('allnames is', allNames);
+	    _this.state = {
+	      'highlighted': null,
+	      'highlightedKey': null,
+	      'completed': allNames
+	    };
 	    return _this;
 	  }
 	
 	  _createClass(App, [{
+	    key: 'highlight',
+	    value: function highlight(name, i) {
+	      this.setState({
+	        'highlighted': name,
+	        'highlightedKey': i
+	      });
+	    }
+	  }, {
+	    key: 'checkName',
+	    value: function checkName(draggedName) {
+	      console.log('dragged Name is', draggedName);
+	      if (draggedName === this.state.highlighted) {
+	        console.log('matches!');
+	        var currentMatches = this.state.completed;
+	        currentMatches[draggedName] = true;
+	        this.setState({
+	          completed: currentMatches
+	        });
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'fullScreen', style: fullStyle },
 	        _react2.default.createElement(
 	          'p',
 	          null,
@@ -137,17 +140,25 @@
 	            'div',
 	            { className: 'leftColumn', style: leftColStyle },
 	            this.props.people.map(function (person, i) {
-	              return _react2.default.createElement(_draggableName2.default, { key: i, name: person.name });
+	              return _react2.default.createElement(_draggableName2.default, {
+	                key: i,
+	                name: person.name,
+	                checkName: _this2.checkName.bind(_this2, person.name),
+	                completed: _this2.state.completed[person.name] });
 	            })
 	          ),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'imgBox', style: imgBoxStyle },
 	            this.props.people.map(function (person, i) {
-	              return _react2.default.createElement('img', { key: i, style: imgStyle, src: path + person.image });
+	              return _react2.default.createElement('img', {
+	                onMouseEnter: _this2.highlight.bind(_this2, person.name, i),
+	                key: i,
+	                src: path + person.image,
+	                style: _this2.state.completed[person.name] ? solvedStyle : _this2.state.highlightedKey === i ? highlightStyle : imgStyle
+	              });
 	            })
-	          ),
-	          _react2.default.createElement(_picture2.default, null)
+	          )
 	        )
 	      );
 	    }
@@ -155,6 +166,47 @@
 	
 	  return App;
 	}(_react2.default.Component);
+	
+	var outerBoxStyle = {
+	  display: 'flex',
+	  flexDirection: 'row'
+	};
+	
+	var fullStyle = {
+	  backgroundColor: '#57C2DD'
+	};
+	
+	var leftColStyle = {
+	  dispaly: 'flex',
+	  flexDirection: 'row',
+	  width: '200px'
+	};
+	
+	var imgBoxStyle = {
+	  display: 'flex',
+	  justifyContent: 'center',
+	  flexDirection: 'row',
+	  flexWrap: 'wrap'
+	};
+	
+	var imgStyle = {
+	  height: '150px',
+	  width: '150px',
+	  margin: '5px',
+	  borderRadius: '3px',
+	  opacity: '0.7'
+	};
+	
+	var highlightStyle = {
+	  height: '150px',
+	  width: '150px',
+	  margin: '5px',
+	  borderRadius: '3px'
+	};
+	
+	var solvedStyle = {
+	  display: 'none'
+	};
 	
 	(0, _reactDom.render)(_react2.default.createElement(App, { people: _people2.default }), document.getElementById('app'));
 
@@ -22060,6 +22112,32 @@
 	}, {
 	  'name': 'Bill 3',
 	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Chris Tham',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Alec Malanawag',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Jamil isabeast',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Jace Zhan',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Frederic hasalastname',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
 	}];
 
 /***/ },
@@ -22101,8 +22179,8 @@
 	  _createClass(DraggableName, [{
 	    key: 'eventLogger',
 	    value: function eventLogger(e, data) {
-	      console.log('Event: ', event);
-	      console.log('Data: ', data);
+	      // console.log('Event: ', event);
+	      // console.log('Data: ', data);
 	    }
 	  }, {
 	    key: 'render',
@@ -22118,10 +22196,10 @@
 	          zIndex: 100,
 	          onStart: this.eventLogger,
 	          onDrag: this.eventLogger,
-	          onStop: this.eventLogger },
+	          onStop: this.props.checkName },
 	        _react2.default.createElement(
 	          'div',
-	          null,
+	          { style: this.props.completed ? solvedStyle : draggableStyle },
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'handle' },
@@ -22134,6 +22212,15 @@
 	
 	  return DraggableName;
 	}(_react2.default.Component);
+	
+	var draggableStyle = {
+	  backgroundColor: '#BBE9EE',
+	  borderRadius: '1px'
+	};
+	
+	var solvedStyle = {
+	  display: 'none'
+	};
 	
 	module.exports = DraggableName;
 
@@ -23691,54 +23778,6 @@
 	});
 	;
 	//# sourceMappingURL=react-draggable.js.map
-
-/***/ },
-/* 175 */
-/*!***********************************!*\
-  !*** ./src/client/app/picture.js ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Picture = function (_React$Component) {
-	  _inherits(Picture, _React$Component);
-	
-	  function Picture() {
-	    _classCallCheck(this, Picture);
-	
-	    return _possibleConstructorReturn(this, (Picture.__proto__ || Object.getPrototypeOf(Picture)).apply(this, arguments));
-	  }
-	
-	  _createClass(Picture, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        ' yooo '
-	      );
-	    }
-	  }]);
-	
-	  return Picture;
-	}(_react2.default.Component);
-	
-	module.exports = Picture;
 
 /***/ }
 /******/ ]);

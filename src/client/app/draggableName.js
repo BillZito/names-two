@@ -7,8 +7,8 @@ class DraggableName extends React.Component{
   }
 
   eventLogger(e: MouseEvent, data: Object){
-    console.log('Event: ', event);
-    console.log('Data: ', data);
+    // console.log('Event: ', event);
+    // console.log('Data: ', data);
   }
 
   render() {
@@ -22,13 +22,22 @@ class DraggableName extends React.Component{
         zIndex={100}
         onStart={this.eventLogger}
         onDrag={this.eventLogger}
-        onStop={this.eventLogger}>
-        <div>
+        onStop={this.props.checkName}>
+        <div style={this.props.completed ? solvedStyle : draggableStyle}>
           <div className="handle">{this.props.name}</div>
         </div>
       </Draggable>
     );
   }
 }
+
+const draggableStyle = {
+  backgroundColor: '#BBE9EE',
+  borderRadius: '1px'
+};
+
+const solvedStyle = {
+  display: 'none'
+};
 
 module.exports = DraggableName;
