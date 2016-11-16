@@ -2,8 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import people from './people';
 import DraggableName from './draggableName';
-// import Picture from './picture';
-// import styles from '../styles.css';
+import Scoreboard from './scoreboard';
 
 var path = './assets/';
 
@@ -16,9 +15,10 @@ class App extends React.Component {
     });
     console.log('allnames is', allNames);
     this.state = {
+      'score': 0,
       'highlighted': null,
       'highlightedKey': null,
-      'completed': allNames
+      'completed': allNames,
     };
   }
 
@@ -36,6 +36,7 @@ class App extends React.Component {
       var currentMatches = this.state.completed;
       currentMatches[draggedName] = true;
       this.setState({
+        score: this.state.score + 3,
         completed: currentMatches
       });
     }
@@ -44,7 +45,10 @@ class App extends React.Component {
   render() {
     return (
       <div className="fullScreen" style={fullStyle}>
-        <p> Points </p>
+        <div className="topBar" style={topBarStyle}>
+          <br></br>
+          <Scoreboard score={this.state.score}/>
+        </div>
         <div className="outerBox" style={outerBoxStyle}> 
           <div className="leftColumn" style={leftColStyle}>
           {
@@ -89,10 +93,20 @@ const fullStyle = {
   backgroundColor: '#57C2DD'
 };
 
+const topBarStyle = {
+  backgroundColor: '#ff6666',
+  marginTop: '25px',
+  marginBottom: '5px',
+  textAlign: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+};
+
 const leftColStyle = {
   dispaly: 'flex',
   flexDirection: 'row',
   width: '200px',
+  marginTop: '6px',
 };
 
 const imgBoxStyle = {

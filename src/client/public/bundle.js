@@ -65,6 +65,10 @@
 	
 	var _draggableName2 = _interopRequireDefault(_draggableName);
 	
+	var _scoreboard = __webpack_require__(/*! ./scoreboard */ 175);
+	
+	var _scoreboard2 = _interopRequireDefault(_scoreboard);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -72,9 +76,6 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	// import Picture from './picture';
-	// import styles from '../styles.css';
 	
 	var path = './assets/';
 	
@@ -92,6 +93,7 @@
 	    });
 	    console.log('allnames is', allNames);
 	    _this.state = {
+	      'score': 0,
 	      'highlighted': null,
 	      'highlightedKey': null,
 	      'completed': allNames
@@ -116,6 +118,7 @@
 	        var currentMatches = this.state.completed;
 	        currentMatches[draggedName] = true;
 	        this.setState({
+	          score: this.state.score + 3,
 	          completed: currentMatches
 	        });
 	      }
@@ -129,9 +132,10 @@
 	        'div',
 	        { className: 'fullScreen', style: fullStyle },
 	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Points '
+	          'div',
+	          { className: 'topBar', style: topBarStyle },
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_scoreboard2.default, { score: this.state.score })
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -176,10 +180,20 @@
 	  backgroundColor: '#57C2DD'
 	};
 	
+	var topBarStyle = {
+	  backgroundColor: '#ff6666',
+	  marginTop: '25px',
+	  marginBottom: '5px',
+	  textAlign: 'center',
+	  display: 'flex',
+	  flexDirection: 'column'
+	};
+	
 	var leftColStyle = {
 	  dispaly: 'flex',
 	  flexDirection: 'row',
-	  width: '200px'
+	  width: '200px',
+	  marginTop: '6px'
 	};
 	
 	var imgBoxStyle = {
@@ -22138,6 +22152,123 @@
 	}, {
 	  'name': 'Bill 3',
 	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Chris Tham',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Alec Malanawag',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Jamil isabeast',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Jace Zhan',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Frederic hasalastname',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Chris Tham',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Alec Malanawag',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Jamil isabeast',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Jace Zhan',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Frederic hasalastname',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Bill Zito',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Chris Tham',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Alec Malanawag',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Jamil isabeast',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Jace Zhan',
+	  'image': 'bill1.jpg'
+	}, {
+	  'name': 'Frederic hasalastname',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
+	}, { 'name': 'Bill 2',
+	  'image': 'bill2.jpg'
+	}, {
+	  'name': 'Bill 3',
+	  'image': 'bill1.jpg'
 	}];
 
 /***/ },
@@ -23778,6 +23909,191 @@
 	});
 	;
 	//# sourceMappingURL=react-draggable.js.map
+
+/***/ },
+/* 175 */
+/*!**************************************!*\
+  !*** ./src/client/app/scoreboard.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _clock = __webpack_require__(/*! ./clock */ 177);
+	
+	var _clock2 = _interopRequireDefault(_clock);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Scoreboard = function (_React$Component) {
+	  _inherits(Scoreboard, _React$Component);
+	
+	  function Scoreboard(props) {
+	    _classCallCheck(this, Scoreboard);
+	
+	    return _possibleConstructorReturn(this, (Scoreboard.__proto__ || Object.getPrototypeOf(Scoreboard)).call(this, props));
+	  }
+	
+	  _createClass(Scoreboard, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            { style: scoreboardStyle },
+	            ' Points: ',
+	            this.props.score,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { style: pumpupStyle },
+	            ' ',
+	            coolPhrases[3],
+	            ' '
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { style: clockStyle },
+	          _react2.default.createElement(_clock2.default, { endAfter: 5 })
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Scoreboard;
+	}(_react2.default.Component);
+	
+	var coolPhrases = ['you make marcus proud', 'now you have to say hi in-person...', 'a friend a day keeps the lonely away', '99% of HR grads marry other HR grads', 'fred will be giving a lecture on friendship next week', 'who will be your next breakfast buddy?', 'you code good', 'you can doo itttttt', 'if only it were this easy to talk to people...'];
+	
+	var scoreboardStyle = {
+	  fontWeight: 'bold',
+	  float: 'left'
+	};
+	
+	var pumpupStyle = {
+	  float: 'none'
+	};
+	
+	var clockStyle = {
+	  float: 'left'
+	};
+	
+	module.exports = Scoreboard;
+
+/***/ },
+/* 176 */,
+/* 177 */
+/*!*********************************!*\
+  !*** ./src/client/app/clock.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Clock = function (_React$Component) {
+	  _inherits(Clock, _React$Component);
+	
+	  function Clock(props) {
+	    _classCallCheck(this, Clock);
+	
+	    var _this = _possibleConstructorReturn(this, (Clock.__proto__ || Object.getPrototypeOf(Clock)).call(this, props));
+	
+	    _this.state = {
+	      timeGone: 0,
+	      startTime: null
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(Clock, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.setState({
+	        startTime: new Date()
+	      });
+	      this.timer = setInterval(this.start.bind(this), 500);
+	    }
+	  }, {
+	    key: 'start',
+	    value: function start() {
+	      var _this2 = this;
+	
+	      var currDate = new Date();
+	      var currSeconds = currDate.getSeconds();
+	      var currMinutes = currDate.getMinutes();
+	      var pastSeconds = this.state.startTime.getSeconds();
+	      var pastMin = this.state.startTime.getMinutes();
+	      var secondsElapsed = (currMinutes - pastMin) * 60 + currSeconds - pastSeconds;
+	
+	      console.log('elapsed', secondsElapsed);
+	      console.log('end after', this.state.timeGone);
+	      // var secondsElapsed = currDate.getSeconds();
+	      var tick = function tick() {
+	        _this2.setState({
+	          timeGone: secondsElapsed
+	        });
+	      };
+	      if (this.props.endAfter - this.state.timeGone < 1) {
+	        this.end();
+	      } else {
+	        tick();
+	      }
+	    }
+	  }, {
+	    key: 'end',
+	    value: function end() {
+	      console.log('it ended');
+	      clearInterval(this.timer);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        ' Time: ',
+	        this.props.endAfter - this.state.timeGone
+	      );
+	    }
+	  }]);
+	
+	  return Clock;
+	}(_react2.default.Component);
+	
+	module.exports = Clock;
 
 /***/ }
 /******/ ]);
