@@ -9,8 +9,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "client/webpack -d --watch",
-    "build": "client/webpack -p"
+    "start": "webpack -d --watch",
+    "build": "webpack -p"
   },
   "author": "",
   "license": "ISC",
