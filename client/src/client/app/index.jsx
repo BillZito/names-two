@@ -28,7 +28,27 @@ class App extends React.Component {
   }
 
   componentDidMount(){
-    // fetch the scores from mongolab...aka fetch them from server...need to setup
+    // fetch the scores from mongolab
+    console.log('component did mount');
+    fetch('http://localhost:5000/addscore', {
+      method: 'POST',
+      body: JSON.stringify({
+        'name': 'woot',
+        'score': 4
+      }),
+      headers: {  
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((resp) => {
+      return resp.json();
+    })
+    .then((parsedResp) => {
+      console.log('parsed', parsedResp);
+    })
+    .catch((err) => {
+      console.log('error posting', err);
+    });
   }
 
   componentWillReceiveProps(){
