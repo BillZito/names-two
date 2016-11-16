@@ -13,8 +13,9 @@ class Scoreboard extends React.Component{
           <span style={scoreboardStyle}> Points: {this.props.score} </span>
           <span style={pumpupStyle}> {coolPhrases[3]} </span>
         </div>
-        <div style={clockStyle}>
-          <Clock endAfter={5}/>
+        <div style={moreInfoStyle}>
+          <Clock style={clockStyle} endAfter={5} gameover={this.props.gameover.bind(this)}/>
+          <span style={nameStyle}> Name: {this.props.name} </span>
         </div>
       </div>
     );
@@ -42,7 +43,15 @@ const pumpupStyle = {
   float: 'none',
 };
 
+const moreInfoStyle ={
+  float: 'left'
+};
+
 const clockStyle = {
+  float: 'left',
+};
+
+const nameStyle = {
   float: 'left',
 };
 

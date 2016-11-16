@@ -24,8 +24,8 @@ class Clock extends React.Component{
     var pastMin = this.state.startTime.getMinutes();
     var secondsElapsed = (currMinutes - pastMin) * 60 + currSeconds - pastSeconds;
 
-    console.log('elapsed', secondsElapsed);
-    console.log('end after', this.state.timeGone);
+    // console.log('elapsed', secondsElapsed);
+    // console.log('end after', this.state.timeGone);
     // var secondsElapsed = currDate.getSeconds();
     var tick = () => {
       this.setState({
@@ -42,7 +42,7 @@ class Clock extends React.Component{
   end(){
     console.log('it ended');
     clearInterval(this.timer);
-    
+    this.props.gameover();
   }
 
   render() {

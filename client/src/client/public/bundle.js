@@ -96,12 +96,64 @@
 	      'score': 0,
 	      'highlighted': null,
 	      'highlightedKey': null,
-	      'completed': allNames
+	      'completed': allNames,
+	      'gameover': true,
+	      'name': '',
+	      'topscores': [{ 'name': '', 'score': '' }]
 	    };
 	    return _this;
 	  }
 	
 	  _createClass(App, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      // fetch the scores from mongolab...aka fetch them from server...need to setup
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps() {
+	      console.log('will receive props');
+	      var allNames = {};
+	      this.props.people.forEach(function (person) {
+	        allNames[person.name] = false;
+	      });
+	      this.setState({
+	        'score': 0,
+	        'highlighted': null,
+	        'highlightedKey': null,
+	        'completed': allNames
+	      });
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(event) {
+	      this.setState({
+	        name: event.target.value
+	      });
+	    }
+	  }, {
+	    key: 'startGame',
+	    value: function startGame(e, second) {
+	      // console.log('e is', e);
+	      e.preventDefault();
+	      this.setState({
+	        gameover: false
+	      });
+	      // console.log('after submit', this.state.name);
+	      this.componentWillReceiveProps();
+	    }
+	  }, {
+	    key: 'gameover',
+	    value: function gameover() {
+	      console.log('top game ended');
+	
+	      this.setState({
+	        'topscores': this.state.topscores.concat([{ name: this.state.name, score: this.state.score }]),
+	        gameover: true,
+	        name: ''
+	      });
+	    }
+	  }, {
 	    key: 'highlight',
 	    value: function highlight(name, i) {
 	      this.setState({
@@ -130,37 +182,78 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'fullScreen', style: fullStyle },
-	        _react2.default.createElement(
+	        null,
+	        !this.state.gameover ? _react2.default.createElement(
 	          'div',
-	          { className: 'topBar', style: topBarStyle },
-	          _react2.default.createElement('br', null),
-	          _react2.default.createElement(_scoreboard2.default, { score: this.state.score })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'outerBox', style: outerBoxStyle },
+	          { className: 'fullScreen', style: fullStyle },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'leftColumn', style: leftColStyle },
-	            this.props.people.map(function (person, i) {
-	              return _react2.default.createElement(_draggableName2.default, {
-	                key: i,
-	                name: person.name,
-	                checkName: _this2.checkName.bind(_this2, person.name),
-	                completed: _this2.state.completed[person.name] });
-	            })
+	            { className: 'topBar', style: topBarStyle },
+	            _react2.default.createElement('br', null),
+	            _react2.default.createElement(_scoreboard2.default, { score: this.state.score, gameover: this.gameover.bind(this), name: this.state.name }),
+	            _react2.default.createElement('br', null)
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'imgBox', style: imgBoxStyle },
-	            this.props.people.map(function (person, i) {
-	              return _react2.default.createElement('img', {
-	                onMouseEnter: _this2.highlight.bind(_this2, person.name, i),
-	                key: i,
-	                src: path + person.image,
-	                style: _this2.state.completed[person.name] ? solvedStyle : _this2.state.highlightedKey === i ? highlightStyle : imgStyle
-	              });
+	            { className: 'outerBox', style: outerBoxStyle },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'leftColumn', style: leftColStyle },
+	              this.props.people.map(function (person, i) {
+	                return _react2.default.createElement(_draggableName2.default, {
+	                  key: i,
+	                  name: person.name,
+	                  checkName: _this2.checkName.bind(_this2, person.name),
+	                  completed: _this2.state.completed[person.name] });
+	              })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'imgBox', style: imgBoxStyle },
+	              this.props.people.map(function (person, i) {
+	                return _react2.default.createElement('img', {
+	                  onMouseEnter: _this2.highlight.bind(_this2, person.name, i),
+	                  key: i,
+	                  src: path + person.image,
+	                  style: _this2.state.completed[person.name] ? solvedStyle : _this2.state.highlightedKey === i ? highlightStyle : imgStyle
+	                });
+	              })
+	            )
+	          )
+	        ) : _react2.default.createElement(
+	          'div',
+	          { className: 'startingdiv', style: startingStyle },
+	          _react2.default.createElement(
+	            'form',
+	            { onSubmit: this.startGame.bind(this), style: formStyle },
+	            'Name:',
+	            _react2.default.createElement('input', { style: inputStyle, type: 'text', name: 'name', value: this.state.name, onChange: this.handleChange.bind(this) }),
+	            _react2.default.createElement('input', { style: inputButtonStyle, type: 'submit', value: 'Submit' }),
+	            _react2.default.createElement(
+	              'div',
+	              { style: scoreStyle },
+	              ' '
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              null,
+	              ' Your last score: ',
+	              this.state.score,
+	              ' '
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { style: leaderboardStyle },
+	              ' Top scores: '
+	            ),
+	            this.state.topscores.map(function (person, i) {
+	              return _react2.default.createElement(
+	                'div',
+	                { key: i + 1 },
+	                ' ',
+	                i + 1 + ". " + person.name + ": " + person.score,
+	                ' '
+	              );
 	            })
 	          )
 	        )
@@ -171,13 +264,13 @@
 	  return App;
 	}(_react2.default.Component);
 	
+	var fullStyle = {
+	  backgroundColor: '#57C2DD'
+	};
+	
 	var outerBoxStyle = {
 	  display: 'flex',
 	  flexDirection: 'row'
-	};
-	
-	var fullStyle = {
-	  backgroundColor: '#57C2DD'
 	};
 	
 	var topBarStyle = {
@@ -220,6 +313,39 @@
 	
 	var solvedStyle = {
 	  display: 'none'
+	};
+	
+	var startingStyle = {
+	  display: 'flex',
+	  flexDirection: 'row',
+	  flexWrap: 'wrap',
+	  backgroundColor: '#57C2DD'
+	};
+	
+	var formStyle = {
+	  marginTop: '20px'
+	};
+	
+	var inputStyle = {
+	  borderRadius: '5px',
+	  marginLeft: '5px',
+	  marginRight: '5px'
+	};
+	
+	var inputButtonStyle = {
+	  borderRadius: '5px'
+	};
+	
+	var scoreStyle = {
+	  display: 'flex',
+	  flexDirection: 'column',
+	  justifyContent: 'center',
+	  marginBottom: '40px'
+	};
+	
+	var leaderboardStyle = {
+	  fontSize: '20px',
+	  textDecoration: 'underline'
 	};
 	
 	(0, _reactDom.render)(_react2.default.createElement(App, { people: _people2.default }), document.getElementById('app'));
@@ -23925,7 +24051,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _clock = __webpack_require__(/*! ./clock */ 177);
+	var _clock = __webpack_require__(/*! ./clock */ 176);
 	
 	var _clock2 = _interopRequireDefault(_clock);
 	
@@ -23972,8 +24098,15 @@
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { style: clockStyle },
-	          _react2.default.createElement(_clock2.default, { endAfter: 5 })
+	          { style: moreInfoStyle },
+	          _react2.default.createElement(_clock2.default, { style: clockStyle, endAfter: 5, gameover: this.props.gameover.bind(this) }),
+	          _react2.default.createElement(
+	            'span',
+	            { style: nameStyle },
+	            ' Name: ',
+	            this.props.name,
+	            ' '
+	          )
 	        )
 	      );
 	    }
@@ -23993,15 +24126,22 @@
 	  float: 'none'
 	};
 	
+	var moreInfoStyle = {
+	  float: 'left'
+	};
+	
 	var clockStyle = {
+	  float: 'left'
+	};
+	
+	var nameStyle = {
 	  float: 'left'
 	};
 	
 	module.exports = Scoreboard;
 
 /***/ },
-/* 176 */,
-/* 177 */
+/* 176 */
 /*!*********************************!*\
   !*** ./src/client/app/clock.js ***!
   \*********************************/
@@ -24058,8 +24198,8 @@
 	      var pastMin = this.state.startTime.getMinutes();
 	      var secondsElapsed = (currMinutes - pastMin) * 60 + currSeconds - pastSeconds;
 	
-	      console.log('elapsed', secondsElapsed);
-	      console.log('end after', this.state.timeGone);
+	      // console.log('elapsed', secondsElapsed);
+	      // console.log('end after', this.state.timeGone);
 	      // var secondsElapsed = currDate.getSeconds();
 	      var tick = function tick() {
 	        _this2.setState({
@@ -24077,6 +24217,7 @@
 	    value: function end() {
 	      console.log('it ended');
 	      clearInterval(this.timer);
+	      this.props.gameover();
 	    }
 	  }, {
 	    key: 'render',
