@@ -8,8 +8,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "nope": "webpack -d --watch",
+    "start": "webpack -d --watch",
+    "prod": "node index.js",
     "heroku-postbuild": "webpack -p"
   },
   "author": "Bill Zito",
