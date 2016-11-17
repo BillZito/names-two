@@ -13,7 +13,7 @@ class App extends React.Component {
     props.people.forEach( (person)=>{
       allNames[person.name] = false;
     });
-    console.log('allnames is', allNames);
+    // console.log('allnames is', allNames);
     this.state = {
       'score': 0,
       'highlighted': null,
@@ -22,37 +22,19 @@ class App extends React.Component {
       'gameover': true,
       'name': '',
       'topscores': [
-        {'name': '', 'score': ''}
+        {'name': 'none', 'score': '0'}
         ],
     };
   }
 
   componentDidMount(){
     // fetch the scores from mongolab
-    console.log('component did mount');
-    fetch('http://localhost:5000/addscore', {
-      method: 'POST',
-      body: JSON.stringify({
-        'name': 'woot',
-        'score': 4
-      }),
-      headers: {  
-        'Content-Type': 'application/json',
-      }
-    })
-    .then((resp) => {
-      return resp.json();
-    })
-    .then((parsedResp) => {
-      console.log('parsed', parsedResp);
-    })
-    .catch((err) => {
-      console.log('error posting', err);
-    });
+    // console.log('component did mount');
+    this.getAllScores();
   }
 
   componentWillReceiveProps(){
-    console.log('will receive props');
+    // console.log('will receive props');
     var allNames = {};
     this.props.people.forEach( (person)=>{
       allNames[person.name] = false;
@@ -62,6 +44,38 @@ class App extends React.Component {
       'highlighted': null,
       'highlightedKey': null,
       'completed': allNames,
+    });
+  }
+
+  getAllScores(){
+    fetch('http://localhost:5000/scores', {
+      method: 'GET',
+      headers: {  
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((resp) => {
+      return resp.json();
+    })
+    .then((parsedResp) => {
+      // console.log('parsed', parsedResp);
+
+      var newTopScores = [];
+      parsedResp.forEach((person) => {
+        newTopScores.push({name: person.name, score: person.score});
+      });
+
+      newTopScores.sort((a, b) => {
+        return b.score - a.score;
+      });
+
+      this.setState({
+        'topscores': newTopScores,
+      });
+
+    })
+    .catch((err) => {
+      console.log('error posting', err);
     });
   }
 
@@ -82,12 +96,43 @@ class App extends React.Component {
   }
 
   gameover(){
-    console.log('top game ended');
-
-    this.setState({
-      'topscores': this.state.topscores.concat([{name: this.state.name, score: this.state.score}]),
-      gameover: true,
-      name: '',
+    // console.log('top game ended');
+    fetch('http://localhost:5000/addscore', {
+      method: 'POST',
+      body: JSON.stringify({
+        'name': this.state.name,
+        'score': this.state.score
+      }),
+      headers: {  
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((resp) => {
+      return resp.json();
+    })
+    .then((parsedResp) => {
+      console.log('parsed', parsedResp);
+      return parsedResp;
+    })
+    .catch((err) => {
+      console.log('error saving score', err);
+      return 'error';
+    })
+    .then((resp) => {
+      console.log('resp from server', resp)
+      var newTopScores = this.state.topscores;
+      newTopScores.push({name: this.state.name, score: this.state.score});
+      newTopScores.sort((a, b)=> {
+        return b.score - a.score;
+      });
+      this.setState({
+        gameover: true,
+        name: '',
+        topscores: newTopScores
+      });
+    })
+    .catch((err) => {
+      console.log('error at end', err);
     });
   }
 
@@ -109,7 +154,8 @@ class App extends React.Component {
         score: this.state.score + 3,
         completed: currentMatches
       });
-    }
+    } 
+    // subtract points for wrong guess
   }
 
   render() {

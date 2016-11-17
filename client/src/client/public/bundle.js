@@ -91,7 +91,7 @@
 	    props.people.forEach(function (person) {
 	      allNames[person.name] = false;
 	    });
-	    console.log('allnames is', allNames);
+	    // console.log('allnames is', allNames);
 	    _this.state = {
 	      'score': 0,
 	      'highlighted': null,
@@ -99,7 +99,7 @@
 	      'completed': allNames,
 	      'gameover': true,
 	      'name': '',
-	      'topscores': [{ 'name': '', 'score': '' }]
+	      'topscores': [{ 'name': 'none', 'score': '0' }]
 	    };
 	    return _this;
 	  }
@@ -108,28 +108,13 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      // fetch the scores from mongolab
-	      console.log('component did mount');
-	      fetch('http://localhost:5000/addscore', {
-	        method: 'POST',
-	        body: JSON.stringify({
-	          'name': 'woot',
-	          'score': 4
-	        }),
-	        headers: {
-	          'Content-Type': 'application/json'
-	        }
-	      }).then(function (resp) {
-	        return resp.json();
-	      }).then(function (parsedResp) {
-	        console.log('parsed', parsedResp);
-	      }).catch(function (err) {
-	        console.log('error posting', err);
-	      });
+	      // console.log('component did mount');
+	      this.getAllScores();
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps() {
-	      console.log('will receive props');
+	      // console.log('will receive props');
 	      var allNames = {};
 	      this.props.people.forEach(function (person) {
 	        allNames[person.name] = false;
@@ -139,6 +124,37 @@
 	        'highlighted': null,
 	        'highlightedKey': null,
 	        'completed': allNames
+	      });
+	    }
+	  }, {
+	    key: 'getAllScores',
+	    value: function getAllScores() {
+	      var _this2 = this;
+	
+	      fetch('http://localhost:5000/scores', {
+	        method: 'GET',
+	        headers: {
+	          'Content-Type': 'application/json'
+	        }
+	      }).then(function (resp) {
+	        return resp.json();
+	      }).then(function (parsedResp) {
+	        // console.log('parsed', parsedResp);
+	
+	        var newTopScores = [];
+	        parsedResp.forEach(function (person) {
+	          newTopScores.push({ name: person.name, score: person.score });
+	        });
+	
+	        newTopScores.sort(function (a, b) {
+	          return b.score - a.score;
+	        });
+	
+	        _this2.setState({
+	          'topscores': newTopScores
+	        });
+	      }).catch(function (err) {
+	        console.log('error posting', err);
 	      });
 	    }
 	  }, {
@@ -162,12 +178,40 @@
 	  }, {
 	    key: 'gameover',
 	    value: function gameover() {
-	      console.log('top game ended');
+	      var _this3 = this;
 	
-	      this.setState({
-	        'topscores': this.state.topscores.concat([{ name: this.state.name, score: this.state.score }]),
-	        gameover: true,
-	        name: ''
+	      // console.log('top game ended');
+	      fetch('http://localhost:5000/addscore', {
+	        method: 'POST',
+	        body: JSON.stringify({
+	          'name': this.state.name,
+	          'score': this.state.score
+	        }),
+	        headers: {
+	          'Content-Type': 'application/json'
+	        }
+	      }).then(function (resp) {
+	        return resp.json();
+	      }).then(function (parsedResp) {
+	        console.log('parsed', parsedResp);
+	        return parsedResp;
+	      }).catch(function (err) {
+	        console.log('error saving score', err);
+	        return 'error';
+	      }).then(function (resp) {
+	        console.log('resp from server', resp);
+	        var newTopScores = _this3.state.topscores;
+	        newTopScores.push({ name: _this3.state.name, score: _this3.state.score });
+	        newTopScores.sort(function (a, b) {
+	          return b.score - a.score;
+	        });
+	        _this3.setState({
+	          gameover: true,
+	          name: '',
+	          topscores: newTopScores
+	        });
+	      }).catch(function (err) {
+	        console.log('error at end', err);
 	      });
 	    }
 	  }, {
@@ -191,11 +235,12 @@
 	          completed: currentMatches
 	        });
 	      }
+	      // subtract points for wrong guess
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this4 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -220,8 +265,8 @@
 	                return _react2.default.createElement(_draggableName2.default, {
 	                  key: i,
 	                  name: person.name,
-	                  checkName: _this2.checkName.bind(_this2, person.name),
-	                  completed: _this2.state.completed[person.name] });
+	                  checkName: _this4.checkName.bind(_this4, person.name),
+	                  completed: _this4.state.completed[person.name] });
 	              })
 	            ),
 	            _react2.default.createElement(
@@ -229,10 +274,10 @@
 	              { className: 'imgBox', style: imgBoxStyle },
 	              this.props.people.map(function (person, i) {
 	                return _react2.default.createElement('img', {
-	                  onMouseEnter: _this2.highlight.bind(_this2, person.name, i),
+	                  onMouseEnter: _this4.highlight.bind(_this4, person.name, i),
 	                  key: i,
 	                  src: path + person.image,
-	                  style: _this2.state.completed[person.name] ? solvedStyle : _this2.state.highlightedKey === i ? highlightStyle : imgStyle
+	                  style: _this4.state.completed[person.name] ? solvedStyle : _this4.state.highlightedKey === i ? highlightStyle : imgStyle
 	                });
 	              })
 	            )
