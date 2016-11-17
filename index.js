@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var dbController = require('./db.js');
 var connectingPort = process.env.MONGODB_URI || 'mongodb://localhost/test';
 
+
 mongoose.connection.on('open', function() {
   console.log('mongoose opened');
 });
@@ -21,6 +22,15 @@ mongoose.connect(connectingPort, function(err) {
   if (err) {
     console.log('error connecting', err);
   }
+});
+
+// new code
+// new code
+var path = require('path');
+app.use(express.static(path.join(__dirname, 'src/client')));
+
+app.get('/', function(request, response) {
+  response.sendFile(__dirname + '/dist/index.html')
 });
 
 app.use(function(req, res, next) {
