@@ -48,7 +48,7 @@ class App extends React.Component {
   }
 
   getAllScores(){
-    fetch('http://cryptic-temple-42662.herokuapp.com/scores', {
+    fetch('https://cryptic-temple-42662.herokuapp.com/scores', {
       method: 'GET',
       headers: {  
         'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ class App extends React.Component {
 
   gameover(){
     // console.log('top game ended');
-    fetch('http://cryptic-temple-42662.herokuapp.com/addscore', {
+    fetch('https://cryptic-temple-42662.herokuapp.com/addscore', {
       method: 'POST',
       body: JSON.stringify({
         'name': this.state.name,
