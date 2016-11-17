@@ -33,7 +33,8 @@ class DraggableName extends React.Component{
 
 const draggableStyle = {
   backgroundColor: '#BBE9EE',
-  borderRadius: '1px'
+  borderRadius: '1px',
+  marginBottom: '2px',
 };
 
 const solvedStyle = {

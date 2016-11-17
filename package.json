@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodex index.js",
+    "start": "webpack -p --config webpack.prod.config.js",
     "postinstall": "webpack -p --config webpack.prod.config.js"
   },
   "author": "Bill Zito",
