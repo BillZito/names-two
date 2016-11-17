@@ -17,7 +17,7 @@ class Scoreboard extends React.Component{
           <span style={pumpupStyle}> {coolPhrases[this.props.score % 10]} </span>
         </div>
         <div style={moreInfoStyle}>
-          <Clock style={clockStyle} endAfter={10} gameover={this.props.gameover.bind(this)}/>
+          <Clock style={clockStyle} endAfter={120} gameover={this.props.gameover.bind(this)}/>
           <span style={nameStyle}> Name: {this.props.name} </span>
         </div>
       </div>

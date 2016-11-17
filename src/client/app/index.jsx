@@ -4,7 +4,7 @@ import people from './people';
 import DraggableName from './draggableName';
 import Scoreboard from './scoreboard';
 
-var path = './assets/';
+var path = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
 
 class App extends React.Component {
   constructor(props){
