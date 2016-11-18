@@ -400,4 +400,9 @@ module.exports = [
     'image': 'Zach_Winchell.jpg',
     'cohort': 2
   },
+  {
+    'name': 'Sophie Leroi',
+    'image': 'Sophie_Leroi.jpg',
+    'cohort': 3
+  }
 ];
