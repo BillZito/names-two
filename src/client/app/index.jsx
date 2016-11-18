@@ -27,7 +27,8 @@ class App extends React.Component {
       'topscores': [
         {'name': 'none', 'score': '0'}
         ],
-      'cohort': '2'
+      'cohort': '2',
+      'rando': ''
     };
   }
 
@@ -76,7 +77,21 @@ class App extends React.Component {
       this.setState({
         'topscores': newTopScores,
       });
+      return fetch('https://cryptic-temple-42662.herokuapp.com/rando', {
+        method: 'GET',
+        headers: {  
+          'Content-Type': 'application/json',
+      }
+      });
 
+    })
+    .then((randoJSON) => {
+      return randoJSON.json();
+    })
+    .then((rando)) => {
+      this.setState({
+        rando: rando
+      });
     })
     .catch((err) => {
       console.log('error posting', err);

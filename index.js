@@ -47,7 +47,6 @@ app.get('/scores', function(req, res) {
   }).catch((err) => {
     console.log('error finding', err);
   });
-
 }); 
 
 app.post('/addscore', function(req, res) {
