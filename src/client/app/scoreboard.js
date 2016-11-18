@@ -10,7 +10,7 @@ class Scoreboard extends React.Component{
     return (
       <div>
         <div style={directStyle}>
-          <span> Drag names onto their corresponding pictures, and you'll get points! </span>
+          <span> Directions: Drag names onto their corresponding pictures, and you'll get points! </span>
         </div>
         <div>
           <span style={scoreboardStyle}> Points: {this.props.score} </span>

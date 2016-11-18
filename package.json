@@ -9,8 +9,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack -p --config webpack.prod.config.js",
-    "postinstall": "webpack -p --config webpack.prod.config.js"
+    "start": "node index.js",
+    "postinstall": "webpack -p --config webpack.prod.config.js",
+    "dev": "webpack -d --watch"
   },
   "author": "Bill Zito",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
+    "lodash": "^4.17.2",
     "mongoose": "^4.6.8",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",

@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import people from './people';
 import DraggableName from './draggableName';
 import Scoreboard from './scoreboard';
+import lodash from 'lodash'
 
 var path = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
 
@@ -10,7 +11,8 @@ class App extends React.Component {
   constructor(props){
     super(props);
     var allNames = {};
-    props.people.forEach( (person)=>{
+    var shuffledPeople = _.shuffle(props.people);
+    this.props.people.forEach( (person)=>{
       allNames[person.name] = false;
     });
     // console.log('allnames is', allNames);
@@ -19,11 +21,13 @@ class App extends React.Component {
       'highlighted': null,
       'highlightedKey': null,
       'completed': allNames,
+      'shuffledPeople': shuffledPeople,
       'gameover': true,
       'name': '',
       'topscores': [
         {'name': 'none', 'score': '0'}
         ],
+      'cohort': '2'
     };
   }
 
@@ -158,6 +162,13 @@ class App extends React.Component {
     // subtract points for wrong guess
   }
 
+  selectCohort(event){
+    this.setState({
+      cohort: event.target.value
+    });
+    // console.log('and', this.state.cohort);
+  }
+
   render() {
     return (
       <div>
@@ -171,7 +182,9 @@ class App extends React.Component {
             <div className="outerBox" style={outerBoxStyle}> 
               <div className="leftColumn" style={leftColStyle}>
               {
-                this.props.people.map((person, i)=> {
+                this.props.people.filter((person)=> {
+                  return this.state.cohort == person.cohort;
+                }).map((person, i)=> {
                   return (
                     <DraggableName 
                       key={i} 
@@ -185,7 +198,10 @@ class App extends React.Component {
               </div>
               <div className="imgBox" style={imgBoxStyle}>
               {
-                this.props.people.map((person, i) => {
+                this.state.shuffledPeople.filter((person) => {
+                  console.log('person is', person, this.state.cohort, person.cohort, this.state.cohort == person.cohort);
+                  return this.state.cohort == person.cohort;
+                }).map((person, i) => {
                   return (
                     <img 
                       onMouseEnter={this.highlight.bind(this, person.name, i)} 
@@ -205,6 +221,13 @@ class App extends React.Component {
           Name:
           <input style={inputStyle} type="text" name="name" value={this.state.name} onChange={this.handleChange.bind(this)}/>
           <input style={inputButtonStyle} type="submit" value="Submit"/>
+          <div> Test me on the names of: </div>
+          <select value={this.state.cohort} onChange={this.selectCohort.bind(this)}>
+            <option value="1"> Cohort 48 </option>
+            <option value="2"> Cohort 50 </option>
+            <option value="3"> Staff </option>
+            <option value="4"> Give em all! </option>
+          </select>
           <div style={scoreStyle}> </div>
             <p> Your last score: {this.state.score} </p>
             <div style={leaderboardStyle}> Top scores: </div>
