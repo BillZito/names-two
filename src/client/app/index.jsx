@@ -199,7 +199,7 @@ class App extends React.Component {
               <div className="imgBox" style={imgBoxStyle}>
               {
                 this.state.shuffledPeople.filter((person) => {
-                  console.log('person is', person, this.state.cohort, person.cohort, this.state.cohort == person.cohort);
+                  // console.log('person is', person, this.state.cohort, person.cohort, this.state.cohort == person.cohort);
                   return this.state.cohort == person.cohort;
                 }).map((person, i) => {
                   return (

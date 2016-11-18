@@ -389,5 +389,15 @@ module.exports = [
     'name': 'Wells Tsai',
     'image': 'Wells_Tsai.jpg',
     'cohort': 2
-  }
+  },
+  {
+    'name': 'Zach Weidenbach',
+    'image': 'Zach_Weidenbach.jpg',
+    'cohort': 2
+  },
+  {
+    'name': 'Zach Winchell',
+    'image': 'Zach_Winchell.jpg',
+    'cohort': 2
+  },
 ];
