@@ -110,8 +110,8 @@ module.exports = [
     'cohort': 1
   },
   {
-    'name': 'Em Lan',
-    'image': 'Em_Lan.jpg',
+    'name': 'Emm Lan',
+    'image': 'Emm_Lan.jpg',
     'cohort': 2
   },
   {
