@@ -52,16 +52,21 @@ app.get('/scores', function(req, res) {
 app.post('/addscore', function(req, res) {
   console.log('request body is', req.body);
   var incoming = req.body;
-  var newScore = dbController.Score({'name': incoming.name, 'score': incoming.score});
-  newScore.save()
-  .then((data) => {
-    console.log('save successfully', data);
-    res.status(201).send(data);
-  })
-  .catch( (err) => {
-    console.log('error saving', err);
-    res.status(404).send('error saving' + err);
-  });
+  if (incoming.score > 117) {
+    res.status(404).send('c\'mon bud');
+  } else {
+
+    var newScore = dbController.Score({'name': incoming.name, 'score': incoming.score});
+    newScore.save()
+    .then((data) => {
+      console.log('save successfully', data);
+      res.status(201).send(data);
+    })
+    .catch( (err) => {
+      console.log('error saving', err);
+      res.status(404).send('error saving' + err);
+    });
+  }
 });
 
 app.listen(app.get('port'), function(){
