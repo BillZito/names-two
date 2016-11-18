@@ -290,7 +290,7 @@
 	              'div',
 	              { className: 'imgBox', style: imgBoxStyle },
 	              this.state.shuffledPeople.filter(function (person) {
-	                console.log('person is', person, _this4.state.cohort, person.cohort, _this4.state.cohort == person.cohort);
+	                // console.log('person is', person, this.state.cohort, person.cohort, this.state.cohort == person.cohort);
 	                return _this4.state.cohort == person.cohort;
 	              }).map(function (person, i) {
 	                return _react2.default.createElement('img', {
@@ -22437,8 +22437,8 @@
 	  'image': 'Dylan_Larrabee.jpg',
 	  'cohort': 1
 	}, {
-	  'name': 'Em Lan',
-	  'image': 'Em_Lan.jpg',
+	  'name': 'Emm Lan',
+	  'image': 'Emm_Lan.jpg',
 	  'cohort': 2
 	}, {
 	  'name': 'Eric Zolayvar',
@@ -22655,6 +22655,14 @@
 	}, {
 	  'name': 'Wells Tsai',
 	  'image': 'Wells_Tsai.jpg',
+	  'cohort': 2
+	}, {
+	  'name': 'Zach Weidenbach',
+	  'image': 'Zach_Weidenbach.jpg',
+	  'cohort': 2
+	}, {
+	  'name': 'Zach Winchell',
+	  'image': 'Zach_Winchell.jpg',
 	  'cohort': 2
 	}];
 
@@ -24370,7 +24378,7 @@
 	        _react2.default.createElement(
 	          'div',
 	          { style: moreInfoStyle },
-	          _react2.default.createElement(_clock2.default, { style: clockStyle, endAfter: 120, gameover: this.props.gameover.bind(this) }),
+	          _react2.default.createElement(_clock2.default, { style: clockStyle, endAfter: 100, gameover: this.props.gameover.bind(this) }),
 	          _react2.default.createElement(
 	            'span',
 	            { style: nameStyle },
