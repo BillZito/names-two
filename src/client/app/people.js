@@ -404,5 +404,15 @@ module.exports = [
     'name': 'Sophie Leroi',
     'image': 'Sophie_Leroi.jpg',
     'cohort': 3
+  },
+  {
+    'name': 'Geoff Boss',
+    'image': 'Geoff_Boss.jpg',
+    'cohort': 3
+  },
+  {
+    'name': 'Mylani Demas',
+    'image': 'Mylani_Demas.png',
+    'cohort': 3
   }
 ];
