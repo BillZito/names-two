@@ -414,5 +414,10 @@ module.exports = [
     'name': 'Mylani Demas',
     'image': 'Mylani_Demas.png',
     'cohort': 3
+  },
+  {
+    'name': 'Lizzy Solitis',
+    'image': 'Lizzy_Solitis.jpg',
+    'cohort': 3
   }
 ];
