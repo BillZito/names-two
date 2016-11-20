@@ -396,8 +396,8 @@ module.exports = [
     'cohort': 2
   },
   {
-    'name': 'Zach Winchell',
-    'image': 'Zach_Winchell.jpg',
+    'name': 'Zack Winchell',
+    'image': 'Zack_Winchell.jpg',
     'cohort': 2
   },
   {
