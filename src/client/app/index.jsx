@@ -27,7 +27,7 @@ class App extends React.Component {
       'topscores': [
         {'name': 'none', 'score': '0'}
         ],
-      'cohort': '2'
+      'cohort': '1'
     };
   }
 
@@ -222,10 +222,7 @@ class App extends React.Component {
           <input style={inputButtonStyle} type="submit" value="Submit"/>
           <div> Test me on the names of: </div>
           <select value={this.state.cohort} onChange={this.selectCohort.bind(this)}>
-            <option value="1"> Cohort 48 </option>
-            <option value="2"> Cohort 50 </option>
-            <option value="3"> Staff </option>
-            <option value="4"> Give em all! </option>
+            <option value="1"> Staff </option>
           </select>
           <div style={scoreStyle}> </div>
             <p> Your last score: {this.state.score} </p>
@@ -327,3 +324,9 @@ const leaderboardStyle = {
 };
 
 render(<App people={people}/>, document.getElementById('app'));
+
+/*
+            <option value="1"> Cohort 48 </option>
+            <option value="2"> Cohort 50 </option>
+            <option value="3"> Staff </option>
+*/

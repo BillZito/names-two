@@ -26,17 +26,21 @@ class Scoreboard extends React.Component{
 }
 
 const coolPhrases = [
-  'now you have to say hi in-person...',
-  'you make marcus proud',
-  'a friend a day keeps the lonely away',
-  '99% of HR grads marry other HR grads',
-  'fred will be giving a lecture on friendship next week',
-  'who will be your next breakfast buddy?',
-  'you code good',
-  'you can doo itttttt',
-  'if only it were this easy to talk to people...',
-  'if you dont hate your friends a little bit, are they really your friends?'
+  'one day you\'ll be a self-driving car too'
 ];
+
+/*
+'now you have to say hi in-person...',
+'you make marcus proud',
+'a friend a day keeps the lonely away',
+'99% of HR grads marry other HR grads',
+'fred will be giving a lecture on friendship next week',
+'who will be your next breakfast buddy?',
+'you code good',
+'you can doo itttttt',
+'if only it were this easy to talk to people...',
+'if you dont hate your friends a little bit, are they really your friends?'
+*/
 
 const scoreboardStyle = {
   fontWeight: 'bold',
