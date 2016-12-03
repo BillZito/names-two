@@ -2,30 +2,28 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
+// set up express
 app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.json());
 
+// set up mongoose and messages
 var mongoose = require('mongoose');
 var dbController = require('./db.js');
 var connectingPort = process.env.MONGODB_URI || 'mongodb://localhost/test';
 
-
 mongoose.connection.on('open', function() {
   console.log('mongoose opened');
 });
-
 mongoose.connection.on('disconnected', function() {
   console.log('mongoose disconnected');
 });
-
 mongoose.connect(connectingPort, function(err) {
   if (err) {
     console.log('error connecting', err);
   }
 });
 
-// new code
-// new code
+// serve static files
 var path = require('path');
 app.use(express.static(path.join(__dirname, 'src/client')));
 
@@ -33,12 +31,14 @@ app.get('/', function(request, response) {
   response.sendFile(__dirname + '/dist/index.html')
 });
 
+// allow access for all
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
+// on get request to scores, send all scores
 app.get('/scores', function(req, res) {
   dbController.Score.find({})
   .then((deets) => {
@@ -49,6 +49,7 @@ app.get('/scores', function(req, res) {
   });
 }); 
 
+// on post request to addscore, add if not a cheater
 app.post('/addscore', function(req, res) {
   console.log('request body is', req.body);
   var incoming = req.body;
@@ -56,6 +57,7 @@ app.post('/addscore', function(req, res) {
     res.status(404).send('c\'mon bud');
   } else {
 
+    // save score to db then return success
     var newScore = dbController.Score({'name': incoming.name, 'score': incoming.score});
     newScore.save()
     .then((data) => {
@@ -69,6 +71,17 @@ app.post('/addscore', function(req, res) {
   }
 });
 
+// on post to s3, get signed url
+app.use('/s3', require('react-s3-uploader/s3router') ({
+  bucket: 'invalidmemories',
+  region: 'us-west-1',
+  signatureVersion: 'v4',
+  headers: {'Access-Control-Allow-Origin': '*'},
+  ACL: 'private',
+}));
+// don't need headers or acl, region set to sf probably
+
+// listen on port 
 app.listen(app.get('port'), function(){
   console.log('listening on port', app.get('port'));
 });
