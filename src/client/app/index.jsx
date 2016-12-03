@@ -1,11 +1,12 @@
 import React from 'react';
 import {render} from 'react-dom';
+import lodash from 'lodash';
+import ReactS3Uploader from 'react-s3-uploader';
 import people from './people';
-import DraggableName from './draggableName';
 import Scoreboard from './scoreboard';
-import lodash from 'lodash'
+import DraggableName from './draggableName';
 
-var path = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
+const path = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
 
 class App extends React.Component {
   constructor(props){
@@ -29,6 +30,14 @@ class App extends React.Component {
         ],
       'cohort': '1'
     };
+
+    this.startGame = this.startGame.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.selectCohort = this.selectCohort.bind(this);
+    this.highlight = this.highlight.bind(this);
+    this.gameover = this.gameover.bind(this);
+    this.checkName = this.checkName.bind(this);
+    // this.renderStartingScreen = this.renderStartingScreen.bind(this);
   }
 
   componentDidMount(){
@@ -167,6 +176,65 @@ class App extends React.Component {
     });
     // console.log('and', this.state.cohort);
   }
+  onUploadError(err){
+    console.log("error uploading photos", err);
+  }
+
+  onFinish(msg){
+    console.log("successfully uploaded photos", msg);
+  }
+
+  renderLeaderboard() {
+    return (
+      <div>
+        <div style={scoreStyle}> </div>
+        <p> Your last score: {this.state.score} </p>
+        <div style={leaderboardStyle}> Top scores: </div>
+        {this.state.topscores.map((person, i)=> {
+          return (<div key={i + 1}> {(i + 1) + ". " + person.name + ": " + person.score} </div>);
+        })}
+      </div>
+    );
+  }
+
+  renderStartingScreen() {
+    return (
+      <div className="startingdiv" style={startingStyle}>
+        <form onSubmit={this.startGame} style={formStyle}>
+          Name:
+          <input style={inputStyle} type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
+          <input style={inputButtonStyle} type="submit" value="Submit"/>
+          <div> Test me on the names of: </div>
+          <select value={this.state.cohort} onChange={this.selectCohort}>
+            <option value="1"> Staff </option>
+          </select>
+          {
+            this.renderLeaderboard()
+          }
+        </form>
+
+      </div>
+    );
+  }
+
+
+  renderUploadOptions() {
+    return (
+      <ReactS3Uploader
+        signingUrl="/s3/sign"
+        accept="image/*"
+        onError={this.onUploadError}
+        onFinish={this.onUploadFinish}
+        uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}
+        contentDisposition="auto"
+      />
+    );
+        // preprocess={this.onUploadStart}
+        // onProgress={this.onUploadProgress}
+        // signingUrlHeaders={{ additional: headers }}
+        // signingUrlQueryParams={{ additional: query-params }}
+        // server="http://cross-origin-server.com" 
+  }
 
   render() {
     return (
@@ -175,7 +243,7 @@ class App extends React.Component {
         <div className="fullScreen" style={fullStyle}>
             <div className="topBar" style={topBarStyle}>
               <br></br>
-              <Scoreboard score={this.state.score} gameover={this.gameover.bind(this)} name={this.state.name}/>
+              <Scoreboard score={this.state.score} gameover={this.gameover} name={this.state.name}/>
               <br></br>
             </div>
             <div className="outerBox" style={outerBoxStyle}> 
@@ -188,7 +256,7 @@ class App extends React.Component {
                     <DraggableName 
                       key={i} 
                       name={person.name} 
-                      checkName={this.checkName.bind(this, person.name)} 
+                      checkName={()=> this.checkName(person.name)} 
                       completed={this.state.completed[person.name]}/>
                   );
                 })
@@ -203,7 +271,7 @@ class App extends React.Component {
                 }).map((person, i) => {
                   return (
                     <img 
-                      onMouseEnter={this.highlight.bind(this, person.name, i)} 
+                      onMouseEnter={()=> this.highlight(person.name, i)} 
                       key={i} 
                       src={path + person.image}
                       style={this.state.completed[person.name] ? solvedStyle : this.state.highlightedKey === i ? highlightStyle : imgStyle}
@@ -215,23 +283,11 @@ class App extends React.Component {
             </div>
         </div>
       ) : (
-      <div className="startingdiv" style={startingStyle}>
-        <form onSubmit={this.startGame.bind(this)} style={formStyle}>
-          Name:
-          <input style={inputStyle} type="text" name="name" value={this.state.name} onChange={this.handleChange.bind(this)}/>
-          <input style={inputButtonStyle} type="submit" value="Submit"/>
-          <div> Test me on the names of: </div>
-          <select value={this.state.cohort} onChange={this.selectCohort.bind(this)}>
-            <option value="1"> Staff </option>
-          </select>
-          <div style={scoreStyle}> </div>
-            <p> Your last score: {this.state.score} </p>
-            <div style={leaderboardStyle}> Top scores: </div>
-            {this.state.topscores.map((person, i)=> {
-              return (<div key={i + 1}> {(i + 1) + ". " + person.name + ": " + person.score} </div>);
-            })}
-        </form>
-      </div>
+        <div>
+        {
+          this.renderStartingScreen()
+        }
+        </div>
       ) }
     </div>
     );
@@ -326,6 +382,7 @@ const leaderboardStyle = {
 render(<App people={people}/>, document.getElementById('app'));
 
 /*
+  old form values for hr testing
             <option value="1"> Cohort 48 </option>
             <option value="2"> Cohort 50 </option>
             <option value="3"> Staff </option>
