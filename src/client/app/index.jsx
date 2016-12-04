@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import lodash from 'lodash';
-import ReactS3Uploader from 'react-s3-uploader';
+import Dropzone from 'react-dropzone';
 import people from './people';
 import Scoreboard from './scoreboard';
 import DraggableName from './draggableName';
@@ -37,7 +37,7 @@ class App extends React.Component {
     this.highlight = this.highlight.bind(this);
     this.gameover = this.gameover.bind(this);
     this.checkName = this.checkName.bind(this);
-    // this.renderStartingScreen = this.renderStartingScreen.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
   componentDidMount(){
@@ -176,30 +176,30 @@ class App extends React.Component {
     });
     // console.log('and', this.state.cohort);
   }
-  onUploadError(err){
-    console.log("error uploading photos", err);
-  }
 
-  onFinish(msg){
-    console.log("successfully uploaded photos", msg);
+  onDrop(files){
+    console.log("files are", files);
+    return fetch('http://localhost:5000/s3/sign', {
+      method: 'POST',
+      body: JSON.stringify({
+        filename: files[0].name,
+        filetype: files[0].type,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(data=>data.json())
+    .then(msg=>console.log('msg', msg))
+    .catch(err=>console.log('error', err));
   }
 
   renderUploadOptions() {
     return (
-      <ReactS3Uploader
-        signingUrl="/s3/sign"
-        accept="image/*"
-        onError={this.onUploadError}
-        onFinish={this.onUploadFinish}
-        uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}
-        contentDisposition="auto"
-      />
+      <Dropzone onDrop={this.onDrop}>
+        <div>Upload your images here</div>
+      </Dropzone>
     );
-        // preprocess={this.onUploadStart}
-        // onProgress={this.onUploadProgress}
-        // signingUrlHeaders={{ additional: headers }}
-        // signingUrlQueryParams={{ additional: query-params }}
-        // server="http://cross-origin-server.com" 
   }
 
   renderLeaderboard() {

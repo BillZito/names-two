@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var S3 = require('aws-sdk/clients/s3');
 
 // set up express
 app.set('port', (process.env.PORT || 5000));
@@ -23,6 +24,9 @@ mongoose.connect(connectingPort, function(err) {
   }
 });
 
+// set up aws
+s3 = new S3();
+
 // serve static files
 var path = require('path');
 app.use(express.static(path.join(__dirname, 'src/client')));
@@ -38,19 +42,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-// on post to s3, get signed url
-app.use('/s3', require('react-s3-uploader/s3router') ({
-  bucket: 'invalidmemories',
-  region: 'us-west-1',
-  signatureVersion: 'v4',
-  headers: {'Access-Control-Allow-Origin': '*'},
-  ACL: 'private',
-}));
-// don't need headers or acl, region set to sf probably
-
-// app.get('/s3', function(req, res) {
-//   res.status(200).send('hello world');
-// });
 
 // on get request to scores, send all scores
 app.get('/scores', function(req, res) {
@@ -83,6 +74,20 @@ app.post('/addscore', function(req, res) {
       res.status(404).send('error saving' + err);
     });
   }
+});
+
+// sign s3 image and return signed url
+app.post('/s3/sign', function(req, res) {
+  var params = {Bucket: 'invalidmemories', Key: req.body.filename, ACL: 'public-read'};
+  var url = s3.getSignedUrl('putObject', params, function(err, url) {
+    if (err !== null) {
+      console.log('error is', err);
+      res.status(404).json(err);
+    } else {
+      console.log("the url is", url);
+      res.status(200).json(url);
+    }
+  });
 });
 
 
