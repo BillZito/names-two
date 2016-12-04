@@ -179,19 +179,31 @@ class App extends React.Component {
 
   onDrop(files){
     console.log("files are", files);
+    const file = files[0];
+
     return fetch('http://localhost:5000/s3/sign', {
       method: 'POST',
       body: JSON.stringify({
-        filename: files[0].name,
-        filetype: files[0].type,
+        filename: file.name,
+        filetype: file.type,
       }),
       headers: {
         'Content-Type': 'application/json',
       }
     })
-    .then(data=>data.json())
-    .then(msg=>console.log('msg', msg))
-    .catch(err=>console.log('error', err));
+    .then(data => data.json())
+    .then(url => this.sendToS3(file, url))
+    .catch(err => console.log('error', err));
+  }
+
+  sendToS3(file, url) {
+    console.log('file is', file.name);
+    fetch(url, {
+      method: 'PUT',
+      body: file,
+    })
+    .then(resp => console.log('aws resp', resp))
+    .catch(err => console.log('err sending', err));
   }
 
   renderUploadOptions() {

@@ -267,22 +267,39 @@
 	  }, {
 	    key: 'onDrop',
 	    value: function onDrop(files) {
+	      var _this4 = this;
+	
 	      console.log("files are", files);
+	      var file = files[0];
+	
 	      return fetch('http://localhost:5000/s3/sign', {
 	        method: 'POST',
 	        body: JSON.stringify({
-	          filename: files[0].name,
-	          filetype: files[0].type
+	          filename: file.name,
+	          filetype: file.type
 	        }),
 	        headers: {
 	          'Content-Type': 'application/json'
 	        }
 	      }).then(function (data) {
 	        return data.json();
-	      }).then(function (msg) {
-	        return console.log('msg', msg);
+	      }).then(function (url) {
+	        return _this4.sendToS3(file, url);
 	      }).catch(function (err) {
 	        return console.log('error', err);
+	      });
+	    }
+	  }, {
+	    key: 'sendToS3',
+	    value: function sendToS3(file, url) {
+	      console.log('file is', file.name);
+	      fetch(url, {
+	        method: 'PUT',
+	        body: file
+	      }).then(function (resp) {
+	        return console.log('aws resp', resp);
+	      }).catch(function (err) {
+	        return console.log('err sending', err);
 	      });
 	    }
 	  }, {
@@ -368,7 +385,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -390,15 +407,15 @@
 	              'div',
 	              { className: 'leftColumn', style: leftColStyle },
 	              this.props.people.filter(function (person) {
-	                return _this4.state.cohort == person.cohort;
+	                return _this5.state.cohort == person.cohort;
 	              }).map(function (person, i) {
 	                return _react2.default.createElement(_draggableName2.default, {
 	                  key: i,
 	                  name: person.name,
 	                  checkName: function checkName() {
-	                    return _this4.checkName(person.name);
+	                    return _this5.checkName(person.name);
 	                  },
-	                  completed: _this4.state.completed[person.name] });
+	                  completed: _this5.state.completed[person.name] });
 	              })
 	            ),
 	            _react2.default.createElement(
@@ -406,15 +423,15 @@
 	              { className: 'imgBox', style: imgBoxStyle },
 	              this.state.shuffledPeople.filter(function (person) {
 	                // console.log('person is', person, this.state.cohort, person.cohort, this.state.cohort == person.cohort);
-	                return _this4.state.cohort == person.cohort;
+	                return _this5.state.cohort == person.cohort;
 	              }).map(function (person, i) {
 	                return _react2.default.createElement('img', {
 	                  onMouseEnter: function onMouseEnter() {
-	                    return _this4.highlight(person.name, i);
+	                    return _this5.highlight(person.name, i);
 	                  },
 	                  key: i,
 	                  src: path + person.image,
-	                  style: _this4.state.completed[person.name] ? solvedStyle : _this4.state.highlightedKey === i ? highlightStyle : imgStyle
+	                  style: _this5.state.completed[person.name] ? solvedStyle : _this5.state.highlightedKey === i ? highlightStyle : imgStyle
 	                });
 	              })
 	            )

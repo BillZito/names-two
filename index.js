@@ -78,7 +78,8 @@ app.post('/addscore', function(req, res) {
 
 // sign s3 image and return signed url
 app.post('/s3/sign', function(req, res) {
-  var params = {Bucket: 'invalidmemories', Key: req.body.filename, ACL: 'public-read'};
+
+  var params = {Bucket: 'invalidmemories', Key: req.body.filename};
   var url = s3.getSignedUrl('putObject', params, function(err, url) {
     if (err !== null) {
       console.log('error is', err);
