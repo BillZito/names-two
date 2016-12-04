@@ -38,6 +38,20 @@ app.use(function(req, res, next) {
   next();
 });
 
+// on post to s3, get signed url
+app.use('/s3', require('react-s3-uploader/s3router') ({
+  bucket: 'invalidmemories',
+  region: 'us-west-1',
+  signatureVersion: 'v4',
+  headers: {'Access-Control-Allow-Origin': '*'},
+  ACL: 'private',
+}));
+// don't need headers or acl, region set to sf probably
+
+// app.get('/s3', function(req, res) {
+//   res.status(200).send('hello world');
+// });
+
 // on get request to scores, send all scores
 app.get('/scores', function(req, res) {
   dbController.Score.find({})
@@ -71,15 +85,6 @@ app.post('/addscore', function(req, res) {
   }
 });
 
-// on post to s3, get signed url
-app.use('/s3', require('react-s3-uploader/s3router') ({
-  bucket: 'invalidmemories',
-  region: 'us-west-1',
-  signatureVersion: 'v4',
-  headers: {'Access-Control-Allow-Origin': '*'},
-  ACL: 'private',
-}));
-// don't need headers or acl, region set to sf probably
 
 // listen on port 
 app.listen(app.get('port'), function(){

@@ -275,6 +275,23 @@
 	      console.log("successfully uploaded photos", msg);
 	    }
 	  }, {
+	    key: 'renderUploadOptions',
+	    value: function renderUploadOptions() {
+	      return _react2.default.createElement(_reactS3Uploader2.default, {
+	        signingUrl: '/s3/sign',
+	        accept: 'image/*',
+	        onError: this.onUploadError,
+	        onFinish: this.onUploadFinish,
+	        uploadRequestHeaders: { 'x-amz-acl': 'public-read' },
+	        contentDisposition: 'auto'
+	      });
+	      // preprocess={this.onUploadStart}
+	      // onProgress={this.onUploadProgress}
+	      // signingUrlHeaders={{ additional: headers }}
+	      // signingUrlQueryParams={{ additional: query-params }}
+	      // server="http://cross-origin-server.com" 
+	    }
+	  }, {
 	    key: 'renderLeaderboard',
 	    value: function renderLeaderboard() {
 	      return _react2.default.createElement(
@@ -334,26 +351,12 @@
 	              ' Staff '
 	            )
 	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('br', null),
+	          this.renderUploadOptions(),
 	          this.renderLeaderboard()
 	        )
 	      );
-	    }
-	  }, {
-	    key: 'renderUploadOptions',
-	    value: function renderUploadOptions() {
-	      return _react2.default.createElement(_reactS3Uploader2.default, {
-	        signingUrl: '/s3/sign',
-	        accept: 'image/*',
-	        onError: this.onUploadError,
-	        onFinish: this.onUploadFinish,
-	        uploadRequestHeaders: { 'x-amz-acl': 'public-read' },
-	        contentDisposition: 'auto'
-	      });
-	      // preprocess={this.onUploadStart}
-	      // onProgress={this.onUploadProgress}
-	      // signingUrlHeaders={{ additional: headers }}
-	      // signingUrlQueryParams={{ additional: query-params }}
-	      // server="http://cross-origin-server.com" 
 	    }
 	  }, {
 	    key: 'render',

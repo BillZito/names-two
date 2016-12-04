@@ -184,6 +184,24 @@ class App extends React.Component {
     console.log("successfully uploaded photos", msg);
   }
 
+  renderUploadOptions() {
+    return (
+      <ReactS3Uploader
+        signingUrl="/s3/sign"
+        accept="image/*"
+        onError={this.onUploadError}
+        onFinish={this.onUploadFinish}
+        uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}
+        contentDisposition="auto"
+      />
+    );
+        // preprocess={this.onUploadStart}
+        // onProgress={this.onUploadProgress}
+        // signingUrlHeaders={{ additional: headers }}
+        // signingUrlQueryParams={{ additional: query-params }}
+        // server="http://cross-origin-server.com" 
+  }
+
   renderLeaderboard() {
     return (
       <div>
@@ -208,6 +226,10 @@ class App extends React.Component {
           <select value={this.state.cohort} onChange={this.selectCohort}>
             <option value="1"> Staff </option>
           </select>
+          <br></br><br></br>
+          {
+            this.renderUploadOptions()
+          }
           {
             this.renderLeaderboard()
           }
@@ -218,23 +240,6 @@ class App extends React.Component {
   }
 
 
-  renderUploadOptions() {
-    return (
-      <ReactS3Uploader
-        signingUrl="/s3/sign"
-        accept="image/*"
-        onError={this.onUploadError}
-        onFinish={this.onUploadFinish}
-        uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}
-        contentDisposition="auto"
-      />
-    );
-        // preprocess={this.onUploadStart}
-        // onProgress={this.onUploadProgress}
-        // signingUrlHeaders={{ additional: headers }}
-        // signingUrlQueryParams={{ additional: query-params }}
-        // server="http://cross-origin-server.com" 
-  }
 
   render() {
     return (

@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "postinstall": "webpack -p --config webpack.prod.config.js",
     "dev": "webpack -d --watch"
   },
@@ -25,6 +25,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "lodash": "^4.17.2",
     "mongoose": "^4.6.8",
+    "nodemon": "^1.11.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-draggable": "^2.2.2",
