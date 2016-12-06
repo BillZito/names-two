@@ -177,10 +177,45 @@ class App extends React.Component {
     // console.log('and', this.state.cohort);
   }
 
+  sendToS3(file, url) {
+    console.log('file is', file.name);
+    fetch(url, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type,
+      },
+    })
+    .then(resp => resp)
+    .catch(err => err);
+  }
+  
   onDrop(files){
     console.log("files are", files);
-    const file = files[0];
+    // const file = files[0];
+    this.getAllPhotos(files, 0, 2);
+  }
 
+
+  getAllPhotos(files, currIndex, end) {
+    if (currIndex === end) {
+      console.log('sent all files');
+      return "success";
+    } else {
+      this.getOnePhoto(files[currIndex])
+      .then((resp) => {
+        console.log('response for', currIndex, resp);
+        return this.getAllPhotos(files, currIndex + 1, end);
+      })
+      .catch((err) => {
+        console.log('error getting file', currIndex, err);
+        return this.getAllPhotos(files, currIndex + 1, end);
+      });
+    }
+      
+  }
+
+  getOnePhoto(file) {
     return fetch('http://localhost:5000/s3/sign', {
       method: 'POST',
       body: JSON.stringify({
@@ -194,19 +229,6 @@ class App extends React.Component {
     .then(data => data.json())
     .then(url => this.sendToS3(file, url))
     .catch(err => console.log('error', err));
-  }
-
-  sendToS3(file, url) {
-    console.log('file is', file.name);
-    fetch(url, {
-      method: 'PUT',
-      body: file,
-      headers: {
-        'Content-Type': file.type,
-      },
-    })
-    .then(resp => console.log('aws resp', resp))
-    .catch(err => console.log('err sending', err));
   }
 
   renderUploadOptions() {
