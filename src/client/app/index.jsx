@@ -192,8 +192,12 @@ class App extends React.Component {
   
   onDrop(files){
     console.log("files are", files);
-    // const file = files[0];
-    this.getAllPhotos(files, 0, 2);
+    // can't change file itself (read only)
+    // files.forEach((file) => {
+    //   file.name = file.name.replace(' ', '_');
+    // });
+
+    this.getAllPhotos(files, 0, files.length);
   }
 
 

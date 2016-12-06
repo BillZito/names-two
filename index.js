@@ -27,7 +27,9 @@ mongoose.connect(connectingPort, function(err) {
 // set up aws
 s3 = new S3();
 
-// serve static files
+/*********************************************************************************
+serve static files
+*********************************************************************************/
 var path = require('path');
 app.use(express.static(path.join(__dirname, 'src/client')));
 
@@ -43,6 +45,9 @@ app.use(function(req, res, next) {
 });
 
 
+/*********************************************************************************
+handle scoring
+*********************************************************************************/
 // on get request to scores, send all scores
 app.get('/scores', function(req, res) {
   dbController.Score.find({})
@@ -76,6 +81,10 @@ app.post('/addscore', function(req, res) {
   }
 });
 
+
+/*********************************************************************************
+sign photo urls
+*********************************************************************************/
 // sign s3 image and return signed url
 app.post('/s3/sign', function(req, res) {
 
@@ -88,6 +97,47 @@ app.post('/s3/sign', function(req, res) {
       console.log("the url is", url);
       res.status(200).json(url);
     }
+  });
+});
+
+
+/*********************************************************************************
+deal with cohorts
+*********************************************************************************/
+
+// create new cohort
+app.post('/cohort/:hash', function(req, res) {
+  // if cohort already exists, overwrite it
+  // dbController.Cohort.find({'name': req.params.hash})
+  // .then((currCohort) => {
+  //   console.log('cohort already exists', currCohort);
+  //   var newCohort = {'name': req.params.hash, 'students': req.body.students};
+  //   newCohort.save()
+  // });
+
+  // otherwise, create new cohort
+  var newCohort = dbController.Cohort.findOneAndUpdate({'name': req.params.hash}, {'students': req.body.students}, {upsert: true, new: true})
+  // newCohort.save()
+  .then((cohortData) => {
+    console.log('successfully posted cohort', cohortData);
+    res.status(201).json(cohortData);
+  })
+  .catch((err) => {
+    console.log('error getting data', err);
+    res.status(404).json(err);
+  });
+});
+
+// get all names from cohort
+app.get('/cohort/retrieve/:hash', function(req, res) {
+  var currCohort = dbController.Cohort.find({'name': req.params.hash})
+  .then((cohortData) => {
+    console.log('successfully fetched cohort', cohortData);
+    res.status(200).json(cohortData);
+  })
+  .catch((err) => {
+    console.log('error retrieving cohort', err);
+    res.status(404).json(err);
   });
 });
 

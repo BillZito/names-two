@@ -6,4 +6,10 @@ var scoreSchema = new Schema({
   score: Number
 });
 
+var cohortSchema = new Schema({
+  name: String,
+  students: [String]
+});
+
 exports.Score = mongoose.model('Score', scoreSchema);
+exports.Cohort = mongoose.model('Cohort', cohortSchema);
