@@ -201,6 +201,9 @@ class App extends React.Component {
     fetch(url, {
       method: 'PUT',
       body: file,
+      headers: {
+        'Content-Type': file.type,
+      },
     })
     .then(resp => console.log('aws resp', resp))
     .catch(err => console.log('err sending', err));
