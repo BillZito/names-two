@@ -107,19 +107,11 @@ deal with cohorts
 
 // create new cohort
 app.post('/cohort/:hash', function(req, res) {
-  // if cohort already exists, overwrite it
-  // dbController.Cohort.find({'name': req.params.hash})
-  // .then((currCohort) => {
-  //   console.log('cohort already exists', currCohort);
-  //   var newCohort = {'name': req.params.hash, 'students': req.body.students};
-  //   newCohort.save()
-  // });
-
-  // otherwise, create new cohort
+  // create new cohort or replace previous one
   var newCohort = dbController.Cohort.findOneAndUpdate({'name': req.params.hash}, {'students': req.body.students}, {upsert: true, new: true})
   // newCohort.save()
   .then((cohortData) => {
-    console.log('successfully posted cohort', cohortData);
+    console.log('successfully posted cohort', cohortData);  
     res.status(201).json(cohortData);
   })
   .catch((err) => {
