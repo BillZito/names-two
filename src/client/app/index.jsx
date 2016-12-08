@@ -28,7 +28,7 @@ class App extends React.Component {
       'topscores': [
         {'name': 'none', 'score': '0'}
         ],
-      'cohort': '1'
+      'cohort': ''
     };
 
     this.startGame = this.startGame.bind(this);
@@ -92,8 +92,9 @@ class App extends React.Component {
   }
 
   handleChange(event){
+    // set events name to new val
     this.setState({
-      name: event.target.value
+      [event.target.name] : event.target.value
     });
   }
 
@@ -191,14 +192,27 @@ class App extends React.Component {
   }
   
   onDrop(files){
-    console.log("files are", files);
-    // can't change file itself (read only)
-    // files.forEach((file) => {
-    //   file.name = file.name.replace(' ', '_');
-    // });
+    console.log('files are', files);
+
+    const people = files.map((imgfile) => {
+      const name = imgfile.name.split('.')[0];
+      return {
+        name: name,
+        image: imgfile.name,
+        cohort: this.state.cohort
+      };
+    });
+
+    console.log('people are', people);
 
     this.getAllPhotos(files, 0, files.length);
   }
+
+  // when files uploaded, 
+    // create an object of each students name, their image name, and their cohort
+    // send cohort creation request to server
+  // on successful upload, create a new game button option on main page
+  // on button selection, populate with that games information
 
 
   getAllPhotos(files, currIndex, end) {
@@ -237,9 +251,15 @@ class App extends React.Component {
 
   renderUploadOptions() {
     return (
-      <Dropzone onDrop={this.onDrop}>
-        <div>Upload your images here</div>
-      </Dropzone>
+      <div>
+        <form>
+        <span> Cohort name: </span>
+          <input name="cohort" value={this.state.cohort} onChange={this.handleChange}/>
+        </form>
+        <Dropzone onDrop={this.onDrop}>
+          <div>Upload your images here</div>
+        </Dropzone>
+      </div>
     );
   }
 
