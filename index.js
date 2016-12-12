@@ -104,11 +104,23 @@ app.post('/s3/sign', function(req, res) {
 /*********************************************************************************
 deal with cohorts
 *********************************************************************************/
+// get list of all cohorts
+app.get('/cohort', function(req, res) {
+  console.log('requesting cohort');
+  dbController.Cohort.find({})
+  .then((allCohorts) => {
+    console.log('allcohorts', allCohorts);
+    res.status(200).json(allCohorts);   
+  })
+  .catch((err) => {
+    console.log('err getting cohorts', err);
+    res.status(404).json(err);
+  });
+});
 
 // create new cohort
 app.post('/cohort/:hash', function(req, res) {
   // create new cohort or replace previous one
-  console.log('my body doe', req.body.students);
   var newCohort = dbController.Cohort.findOneAndUpdate({'name': req.params.hash}, {'students': req.body.students}, {upsert: true, new: true})
   // newCohort.save()
   .then((cohortData) => {

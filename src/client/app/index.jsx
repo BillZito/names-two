@@ -6,8 +6,8 @@ import people from './people';
 import Scoreboard from './scoreboard';
 import DraggableName from './draggableName';
 
-const path = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
-const server = 'http://localhost:5000/';
+const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
+const serverPath = 'http://localhost:5000/';
 
 class App extends React.Component {
   constructor(props){
@@ -29,7 +29,8 @@ class App extends React.Component {
       'topscores': [
         {'name': 'none', 'score': '0'}
         ],
-      'cohort': ''
+      'cohort': '',
+      'allCohorts': [],
     };
 
     this.startGame = this.startGame.bind(this);
@@ -39,12 +40,14 @@ class App extends React.Component {
     this.gameover = this.gameover.bind(this);
     this.checkName = this.checkName.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.getCohortList = this.getCohortList.bind(this);
   }
 
   componentDidMount(){
     // fetch the scores from mongolab
     // console.log('component did mount');
     this.getAllScores();
+    this.getCohortList();
   }
 
   componentWillReceiveProps(){
@@ -195,7 +198,7 @@ class App extends React.Component {
   saveNewCohort(people) {
     //
     console.log('people in savenew are', people);
-    return fetch(server + 'cohort/' + this.state.cohort, {
+    return fetch(serverPath + 'cohort/' + this.state.cohort, {
       'method': 'POST',
       'body': JSON.stringify({students: people}),
       'headers': {
@@ -259,7 +262,25 @@ class App extends React.Component {
     })
     .then(data => data.json())
     .then(url => this.sendToS3(file, url))
-    .catch(err => console.log('error', err));
+    .catch(err => console.log('error getting photo', err));
+  }
+
+  getCohortList() {
+    return fetch(serverPath + 'cohort', {
+      method: 'GET',
+    })
+    .then(data => data.json())
+    .then((cohortList) => {
+      console.log('cohort list is', cohortList);
+      const currCohorts = cohortList.map((cohort) => {
+        return cohort.name;
+      });
+      console.log('currcohorts', currCohorts);
+      this.setState({
+        allCohorts: currCohorts
+      });
+    })
+    .catch(err => console.log('error getting cohorts', err));
   }
 
   renderUploadOptions() {
@@ -298,7 +319,12 @@ class App extends React.Component {
           <input style={inputButtonStyle} type="submit" value="Submit"/>
           <div> Test me on the names of: </div>
           <select value={this.state.cohort} onChange={this.selectCohort}>
-            <option value="1"> Staff </option>
+            {
+              this.state.allCohorts.map((cohort, i) => {
+                console.log('innercohorts', cohort);
+                return (<option key={i} value={i}> {cohort} </option>);
+              })
+            }
           </select>
           <br></br><br></br>
           {
@@ -312,8 +338,6 @@ class App extends React.Component {
       </div>
     );
   }
-
-
 
   render() {
     return (
@@ -345,14 +369,13 @@ class App extends React.Component {
               <div className="imgBox" style={imgBoxStyle}>
               {
                 this.state.shuffledPeople.filter((person) => {
-                  // console.log('person is', person, this.state.cohort, person.cohort, this.state.cohort == person.cohort);
                   return this.state.cohort == person.cohort;
                 }).map((person, i) => {
                   return (
                     <img 
                       onMouseEnter={()=> this.highlight(person.name, i)} 
                       key={i} 
-                      src={path + person.image}
+                      src={cdnPath + person.image}
                       style={this.state.completed[person.name] ? solvedStyle : this.state.highlightedKey === i ? highlightStyle : imgStyle}
                     />
                   );
@@ -459,10 +482,3 @@ const leaderboardStyle = {
 };
 
 render(<App people={people}/>, document.getElementById('app'));
-
-/*
-  old form values for hr testing
-            <option value="1"> Cohort 48 </option>
-            <option value="2"> Cohort 50 </option>
-            <option value="3"> Staff </option>
-*/
