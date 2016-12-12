@@ -7,6 +7,7 @@ import Scoreboard from './scoreboard';
 import DraggableName from './draggableName';
 
 const path = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
+const server = 'http://localhost:5000/';
 
 class App extends React.Component {
   constructor(props){
@@ -191,6 +192,21 @@ class App extends React.Component {
     .catch(err => err);
   }
   
+  saveNewCohort(people) {
+    //
+    console.log('people in savenew are', people);
+    return fetch(server + 'cohort/' + this.state.cohort, {
+      'method': 'POST',
+      'body': JSON.stringify({students: people}),
+      'headers': {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(data => data.json())
+    .then(msg => console.log('message received', msg))
+    .catch(err => console.log('error saving new cohort', err)); 
+  }
+
   onDrop(files){
     console.log('files are', files);
 
@@ -199,18 +215,15 @@ class App extends React.Component {
       return {
         name: name,
         image: imgfile.name,
-        cohort: this.state.cohort
       };
     });
 
-    console.log('people are', people);
+    // console.log('people are', people);
 
+    this.saveNewCohort(people);
     this.getAllPhotos(files, 0, files.length);
   }
 
-  // when files uploaded, 
-    // create an object of each students name, their image name, and their cohort
-    // send cohort creation request to server
   // on successful upload, create a new game button option on main page
   // on button selection, populate with that games information
 
@@ -218,7 +231,7 @@ class App extends React.Component {
   getAllPhotos(files, currIndex, end) {
     if (currIndex === end) {
       console.log('sent all files');
-      return "success";
+      return 'success';
     } else {
       this.getOnePhoto(files[currIndex])
       .then((resp) => {

@@ -8,7 +8,7 @@ var scoreSchema = new Schema({
 
 var cohortSchema = new Schema({
   name: String,
-  students: [String]
+  students: [{name: String, image: String}]
 });
 
 exports.Score = mongoose.model('Score', scoreSchema);

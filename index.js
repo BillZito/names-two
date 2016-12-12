@@ -108,6 +108,7 @@ deal with cohorts
 // create new cohort
 app.post('/cohort/:hash', function(req, res) {
   // create new cohort or replace previous one
+  console.log('my body doe', req.body.students);
   var newCohort = dbController.Cohort.findOneAndUpdate({'name': req.params.hash}, {'students': req.body.students}, {upsert: true, new: true})
   // newCohort.save()
   .then((cohortData) => {

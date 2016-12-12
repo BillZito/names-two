@@ -26,10 +26,6 @@ class Scoreboard extends React.Component{
 }
 
 const coolPhrases = [
-  'one day you\'ll be a self-driving car too'
-];
-
-/*
 'now you have to say hi in-person...',
 'you make marcus proud',
 'a friend a day keeps the lonely away',
@@ -40,7 +36,7 @@ const coolPhrases = [
 'you can doo itttttt',
 'if only it were this easy to talk to people...',
 'if you dont hate your friends a little bit, are they really your friends?'
-*/
+];
 
 const scoreboardStyle = {
   fontWeight: 'bold',
