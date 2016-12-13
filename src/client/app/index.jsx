@@ -2,7 +2,6 @@ import React from 'react';
 import {render} from 'react-dom';
 import lodash from 'lodash';
 import Dropzone from 'react-dropzone';
-import people from './people';
 import Scoreboard from './scoreboard';
 import DraggableName from './draggableName';
 
@@ -12,24 +11,28 @@ const serverPath = 'http://localhost:5000/';
 class App extends React.Component {
   constructor(props){
     super(props);
-    var allNames = {};
-    var shuffledPeople = _.shuffle(props.people);
-    this.props.people.forEach( (person)=>{
-      allNames[person.name] = false;
-    });
-    // console.log('allnames is', allNames);
+    // var allNames = {};
+    // var shuffledPeople = _.shuffle(props.people);
+    // this.props.people.forEach( (person)=>{
+    //   allNames[person.name] = false;
+    // });
+    // set state: 
+    //       'completed': allNames,
+      // 'shuffledPeople': shuffledPeople,
+
     this.state = {
       'score': 0,
       'highlighted': null,
       'highlightedKey': null,
-      'completed': allNames,
-      'shuffledPeople': shuffledPeople,
+      'completed': '',
+      'shuffledPeople': '',
       'gameover': true,
       'name': '',
       'topscores': [
         {'name': 'none', 'score': '0'}
         ],
       'cohort': '',
+      'selectedCohort': '',
       'allCohorts': [],
     };
 
@@ -48,20 +51,26 @@ class App extends React.Component {
     // console.log('component did mount');
     this.getAllScores();
     this.getCohortList();
-  }
-
-  componentWillReceiveProps(){
-    // console.log('will receive props');
-    var allNames = {};
-    this.props.people.forEach( (person)=>{
-      allNames[person.name] = false;
-    });
     this.setState({
       'score': 0,
       'highlighted': null,
       'highlightedKey': null,
-      'completed': allNames,
     });
+  }
+
+
+  componentWillReceiveProps(){
+    // console.log('will receive props');
+    // var allNames = {};
+    // this.props.people.forEach( (person)=>{
+    //   allNames[person.name] = false;
+    // });
+    // this.setState({
+    //   'score': 0,
+    //   'highlighted': null,
+    //   'highlightedKey': null,
+    //   'completed': allNames,
+    // });
   }
 
   getAllScores(){
@@ -102,9 +111,37 @@ class App extends React.Component {
     });
   }
 
+  preparePeople() {
+    console.log('all cohorts', this.state.allCohorts);
+    console.log('selected cohort', this.state.selectedCohort);
+
+    const people = this.state.allCohorts.filter((cohort) => {
+      console.log('cohort name is', cohort.name);
+      return cohort.name === this.state.selectedCohort;
+    })[0]['students'];
+    console.log('people are', people);
+    // console.log('students are', people['students']);
+
+    const shuffledPeople = _.shuffle(people);
+    
+    const allNames = {};
+    people.forEach((person) => {
+      allNames[person] = false;
+    });
+
+    this.setState({
+      'completed': allNames,
+      'shuffledPeople': shuffledPeople,
+      'unshuffledPeople': people,
+    });
+    console.log('completed and shuffled people complete');
+  }
+
   startGame(e, second){
     // console.log('e is', e);
     e.preventDefault();
+
+    this.preparePeople();
     this.setState({
       gameover: false,
     });
@@ -176,10 +213,10 @@ class App extends React.Component {
   }
 
   selectCohort(event){
+    console.log('calling select cohort', event.target.value);
     this.setState({
-      cohort: event.target.value
+      selectedCohort: event.target.value
     });
-    // console.log('and', this.state.cohort);
   }
 
   sendToS3(file, url) {
@@ -272,13 +309,12 @@ class App extends React.Component {
     .then(data => data.json())
     .then((cohortList) => {
       console.log('cohort list is', cohortList);
-      const currCohorts = cohortList.map((cohort) => {
-        return cohort.name;
-      });
-      console.log('currcohorts', currCohorts);
+
       this.setState({
-        allCohorts: currCohorts
+        allCohorts: cohortList
       });
+
+      // this.preparePeople();
     })
     .catch(err => console.log('error getting cohorts', err));
   }
@@ -316,13 +352,12 @@ class App extends React.Component {
         <form onSubmit={this.startGame} style={formStyle}>
           Name:
           <input style={inputStyle} type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
-          <input style={inputButtonStyle} type="submit" value="Submit"/>
+          <input style={inputButtonStyle} type="submit" value="Start game"/>
           <div> Test me on the names of: </div>
-          <select value={this.state.cohort} onChange={this.selectCohort}>
+          <select value={this.state.selectedCohort} onChange={this.selectCohort}>
             {
               this.state.allCohorts.map((cohort, i) => {
-                console.log('innercohorts', cohort);
-                return (<option key={i} value={i}> {cohort} </option>);
+                return (<option key={i} value={cohort.name}> {cohort.name} </option>);
               })
             }
           </select>
@@ -352,9 +387,7 @@ class App extends React.Component {
             <div className="outerBox" style={outerBoxStyle}> 
               <div className="leftColumn" style={leftColStyle}>
               {
-                this.props.people.filter((person)=> {
-                  return this.state.cohort == person.cohort;
-                }).map((person, i)=> {
+                this.state.unshuffledPeople.map((person, i)=> {
                   return (
                     <DraggableName 
                       key={i} 
@@ -368,9 +401,7 @@ class App extends React.Component {
               </div>
               <div className="imgBox" style={imgBoxStyle}>
               {
-                this.state.shuffledPeople.filter((person) => {
-                  return this.state.cohort == person.cohort;
-                }).map((person, i) => {
+                this.state.shuffledPeople.map((person, i) => {
                   return (
                     <img 
                       onMouseEnter={()=> this.highlight(person.name, i)} 
@@ -481,4 +512,4 @@ const leaderboardStyle = {
   textDecoration: 'underline',
 };
 
-render(<App people={people}/>, document.getElementById('app'));
+render(<App />, document.getElementById('app'));
