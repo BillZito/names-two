@@ -1,24 +1,18 @@
 import React from 'react';
 import {render} from 'react-dom';
 import lodash from 'lodash';
+import keydown from 'react-keydown';
 import Dropzone from 'react-dropzone';
 import Scoreboard from './scoreboard';
 import DraggableName from './draggableName';
 
-const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/names/';
+const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/';
 const serverPath = 'http://localhost:5000/';
 
+// @keydown
 class App extends React.Component {
   constructor(props){
     super(props);
-    // var allNames = {};
-    // var shuffledPeople = _.shuffle(props.people);
-    // this.props.people.forEach( (person)=>{
-    //   allNames[person.name] = false;
-    // });
-    // set state: 
-    //       'completed': allNames,
-      // 'shuffledPeople': shuffledPeople,
 
     this.state = {
       'score': 0,
@@ -34,6 +28,7 @@ class App extends React.Component {
       'cohort': '',
       'selectedCohort': '',
       'allCohorts': [],
+      'key': 'none'
     };
 
     this.startGame = this.startGame.bind(this);
@@ -48,7 +43,6 @@ class App extends React.Component {
 
   componentDidMount(){
     // fetch the scores from mongolab
-    // console.log('component did mount');
     this.getAllScores();
     this.getCohortList();
     this.setState({
@@ -58,20 +52,15 @@ class App extends React.Component {
     });
   }
 
+  // componentWillReceiveProps( nextProps ) {
+  //   console.log('nextProps', nextProps);
+  //   console.log('event', event, event.which);
 
-  componentWillReceiveProps(){
-    // console.log('will receive props');
-    // var allNames = {};
-    // this.props.people.forEach( (person)=>{
-    //   allNames[person.name] = false;
-    // });
-    // this.setState({
-    //   'score': 0,
-    //   'highlighted': null,
-    //   'highlightedKey': null,
-    //   'completed': allNames,
-    // });
-  }
+  //   const { keydown: { event } } = nextProps;
+  //   if ( event ) {
+  //     this.setState( { key: event.which } );
+  //   }
+  // }
 
   getAllScores(){
     fetch('https://cryptic-temple-42662.herokuapp.com/scores', {
@@ -226,6 +215,7 @@ class App extends React.Component {
       body: file,
       headers: {
         'Content-Type': file.type,
+        'x-amz-acl': 'public-read',
       },
     })
     .then(resp => resp)
@@ -311,9 +301,11 @@ class App extends React.Component {
       console.log('cohort list is', cohortList);
 
       this.setState({
-        allCohorts: cohortList
+        allCohorts: cohortList,
+        selectedCohort: cohortList[0]['name'],
       });
 
+      console.log('cohortlist[0][name', cohortList[0]['name']);
       // this.preparePeople();
     })
     .catch(err => console.log('error getting cohorts', err));

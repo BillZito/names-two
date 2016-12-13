@@ -88,7 +88,7 @@ sign photo urls
 // sign s3 image and return signed url
 app.post('/s3/sign', function(req, res) {
 
-  var params = {Bucket: 'invalidmemories', Key: req.body.filename, ContentType: req.body.filetype};
+  var params = {Bucket: 'invalidmemories', Key: req.body.filename, ContentType: req.body.filetype, ACL: 'public-read'};
   var url = s3.getSignedUrl('putObject', params, function(err, url) {
     if (err !== null) {
       console.log('error is', err);
