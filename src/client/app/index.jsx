@@ -5,8 +5,8 @@ import Dropzone from 'react-dropzone';
 import Scoreboard from './scoreboard';
 
 const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/';
-// const serverPath = 'http://localhost:5000/';
-const serverPath = 'https://cryptic-temple-42662.herokuapp.com/';
+const serverPath = 'http://localhost:5000/';
+// const serverPath = 'https://cryptic-temple-42662.herokuapp.com/';
 
 class App extends React.Component {
   constructor(props){
@@ -482,8 +482,8 @@ const imgBoxStyle = {
 };
 
 const imgStyle = {
-  height: '150px',
-  width: '150px',
+  height: '250px',
+  width: '250px',
   margin: '5px',
   borderRadius: '3px',
   opacity: '0.9',

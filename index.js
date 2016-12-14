@@ -2,6 +2,50 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var S3 = require('aws-sdk/clients/s3');
+var resize = require('im-resize');
+var fs = require('fs');
+
+// uncomment to make small versions of all photos
+// const photoFolder = '/Users/billzito/Downloads/53/';
+// fs.readdir(photoFolder, (err, files) => {
+//   // console.log(files[1].replace(' ', '\\ '));
+  
+//   files.forEach( (file, i) => {
+//     if (i > 30 && i < 32) {
+//       makeSmallPhoto(file.replace(' ', '\\ '));
+//     }
+//   });
+
+// });
+// // sup
+// var makeSmallPhoto = function(filePath) {
+//   var image = {
+//     path: photoFolder + filePath,
+//     width: 6000,
+//     height: 4000.
+//   };
+
+//   var output = {
+//     path: '/Users/billzito/Documents/53',
+//     versions: [
+//     {
+//       maxWidth: 250,
+//       aspect: "1:1"
+//     }],
+//   };
+
+//   resize(image, output, function(err, versions) {
+//     if (err) {
+//       console.log('err', err);
+//     } else {
+//       console.log(versions[0].path);
+//     }
+//   });
+// };
+// need double back slash to have one at the end
+
+
+
 
 // set up express
 app.set('port', (process.env.PORT || 5000));
