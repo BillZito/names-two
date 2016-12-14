@@ -15,6 +15,6 @@ exports.Score = mongoose.model('Score', scoreSchema);
 exports.Cohort = mongoose.model('Cohort', cohortSchema);
 
 // if want to drop database, run below code
-exports.Cohort.remove({}, function(err) {
-  console.log('cohort database dropped', err);
-});
+// exports.Cohort.remove({}, function(err) {
+//   console.log('cohort database dropped', err);
+// });
