@@ -59,9 +59,11 @@ class App extends React.Component {
     })
     .then((parsedResp) => {
       var newTopScores = [];
-      parsedResp.forEach((person) => {
+      // only take top 50 scores if there are 100 to take
+      for (var i = 0; i < Math.min(50, parsedResp.length); i ++) {
+        var person = parsedResp[i];
         newTopScores.push({name: person.name, score: person.score});
-      });
+      }
 
       newTopScores.sort((a, b) => {
         return b.score - a.score;
@@ -94,13 +96,14 @@ class App extends React.Component {
   preparePeople() {
     const people = this.state.allCohorts.filter((cohort) => {
       return cohort.name === this.state.selectedCohort;
-    })[0]['students'].map((studentObj, i) => {
+    })[0]['students'];
+
+    const noNumberShuffledPeople = _.shuffle(people);
+    const shuffledPeople = noNumberShuffledPeople.map((studentObj, i) => {
       const newObj = studentObj; 
       newObj['number'] = i;
       return newObj;
     });
-
-    const shuffledPeople = _.shuffle(people);
     
     const allNames = {};
     people.forEach((person) => {
@@ -149,6 +152,7 @@ class App extends React.Component {
     this.preparePeople();
     this.setState({
       gameover: false,
+      score: 0,
     });
   }
 
@@ -184,7 +188,8 @@ class App extends React.Component {
       this.setState({
         gameover: true,
         name: '',
-        topscores: newTopScores
+        topscores: newTopScores,
+        currPerson: '',
       });
     })
     .catch((err) => {
@@ -217,7 +222,6 @@ class App extends React.Component {
         this.setState({
           currPerson: newPerson,
         }, () => {
-          console.log('choose random called for second time');
            // call choose random again, and 
           this.chooseRandom();
           // rerender -- need this?
@@ -401,7 +405,7 @@ class App extends React.Component {
               <br></br>
               <Scoreboard score={this.state.score} gameover={this.gameover} name={this.state.name}/>
               <br></br>
-              <button style={endButtonStyle} onClick={this.gameover}>End Practice</button>
+              <button style={endButtonStyle} onClick={this.gameover}>End Session</button>
             </div>
             <div className="outerBox" style={outerBoxStyle}> 
               <div className="leftColumn" style={leftColStyle}>
@@ -448,7 +452,8 @@ const fullStyle = {
 
 const outerBoxStyle = {
   display: 'flex',
-  flexDirection: 'row'
+  flexDirection: 'row',
+  marginLeft: '15px',
 };
 
 const topBarStyle = {
@@ -458,6 +463,7 @@ const topBarStyle = {
   textAlign: 'center',
   display: 'flex',
   flexDirection: 'column',
+  padding: '15px',
 };
 
 
@@ -480,7 +486,7 @@ const imgStyle = {
   width: '150px',
   margin: '5px',
   borderRadius: '3px',
-  opacity: '0.7'
+  opacity: '0.9',
 };
 
 const solvedStyle = {
@@ -492,6 +498,7 @@ const startingStyle = {
   flexDirection: 'row',
   flexWrap: 'wrap',
   backgroundColor: '#57C2DD',
+  padding: '15px',
 };
 
 const formStyle = {
@@ -502,10 +509,12 @@ const inputStyle = {
   borderRadius: '5px',
   marginLeft: '5px',
   marginRight: '5px',
+  marginBottom: '10px',
 }
 
 const inputButtonStyle = {
   borderRadius: '5px',
+  marginBottom: '10px',
 }
 
 const scoreStyle = {
@@ -522,7 +531,8 @@ const leaderboardStyle = {
 
 const endButtonStyle = {
   width: '60px',
-  margin: '5px'
+  margin: '5px',
+  borderRadius: '5px',
 };
 
 render(<App />, document.getElementById('app'));

@@ -52,7 +52,7 @@ const pumpupStyle = {
 };
 
 const moreInfoStyle ={
-  float: 'left'
+  float: 'left',
 };
 
 const clockStyle = {
