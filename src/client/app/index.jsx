@@ -5,8 +5,8 @@ import Dropzone from 'react-dropzone';
 import Scoreboard from './scoreboard';
 
 const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/';
-const serverPath = 'http://localhost:5000/';
-// const serverPath = 'https://cryptic-temple-42662.herokuapp.com/';
+// const serverPath = 'http://localhost:5000/';
+const serverPath = 'https://cryptic-temple-42662.herokuapp.com/';
 
 class App extends React.Component {
   constructor(props){
@@ -48,7 +48,7 @@ class App extends React.Component {
   }
 
   getAllScores(){
-    fetch('https://cryptic-temple-42662.herokuapp.com/scores', {
+    fetch(serverPath + 'scores', {
       method: 'GET',
       headers: {  
         'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ class App extends React.Component {
   }
 
   gameover(){
-    fetch('https://cryptic-temple-42662.herokuapp.com/addscore', {
+    fetch(serverPath + 'addscore', {
       method: 'POST',
       body: JSON.stringify({
         'name': this.state.name,
@@ -408,12 +408,10 @@ class App extends React.Component {
               {
                 this.state.randomPeople.map((person, i)=> {
                   return (
-                    <div>
+                    <div key={i}>
                       <button 
-                        key={i} 
                         name={person.name} 
                         onClick={() => this.checkName(person.name)}
-                        completed={this.state.completed[person.name]}
                       > {person.name}
                       </button>
                     </div>
