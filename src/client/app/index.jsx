@@ -28,10 +28,12 @@ class App extends React.Component {
       'allCohorts': [],
       'currPerson': '',
       'randomPeople': [],
+      'showUpload': false,
     };
 
     this.startGame = this.startGame.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleCheckChange = this.handleCheckChange.bind(this);
     this.selectCohort = this.selectCohort.bind(this);
     this.highlight = this.highlight.bind(this);
     this.gameover = this.gameover.bind(this);
@@ -89,6 +91,13 @@ class App extends React.Component {
     });
   }
 
+  handleCheckChange(event) {
+    console.log('event', event.target.checked);
+    this.setState({
+      [event.target.name] : event.target.checked
+    });
+  }
+
   preparePeople() {
     const people = this.state.allCohorts.filter((cohort) => {
       return cohort.name === this.state.selectedCohort;
@@ -117,7 +126,6 @@ class App extends React.Component {
 
 
     console.log('shuffled people arr', shuffledPeople);
-    // console.log('state', this.state.shuffledPeople);
   }
 
   chooseRandom() {
@@ -219,7 +227,7 @@ class App extends React.Component {
 
       if (this.state.currPerson.number === this.state.shuffledPeople.length - 1) {
         // if is the last person, set to gameover
-        this.gameover();
+        this.gameover();  
       } else {
         // otherwise, set the current person to the next one, 
         const newPerson = this.state.shuffledPeople[this.state.currPerson.number + 1];
@@ -385,14 +393,17 @@ class App extends React.Component {
             }
           </select>
           <br></br><br></br>
-          {
-            this.renderUploadOptions()
-          }
-          {
-            this.renderLeaderboard()
-          }
-        </form>
+          
+          <span>Upload cohort </span>
+          <input style={inputStyle} type="checkbox" name="showUpload" onChange={this.handleCheckChange}/>
+            {
+              this.state.showUpload ? (this.renderUploadOptions()) : null
+            }
+            {
+              this.renderLeaderboard()
+            }
 
+        </form>
       </div>
     );
   }
