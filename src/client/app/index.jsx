@@ -1,7 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
 import lodash from 'lodash';
-import keydown from 'react-keydown';
 import Dropzone from 'react-dropzone';
 import Scoreboard from './scoreboard';
 import DraggableName from './draggableName';
@@ -9,7 +8,6 @@ import DraggableName from './draggableName';
 const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/';
 const serverPath = 'http://localhost:5000/';
 
-// @keydown
 class App extends React.Component {
   constructor(props){
     super(props);
@@ -28,7 +26,8 @@ class App extends React.Component {
       'cohort': '',
       'selectedCohort': '',
       'allCohorts': [],
-      'key': 'none'
+      'currPerson': '',
+      'randomPeople': [],
     };
 
     this.startGame = this.startGame.bind(this);
@@ -45,22 +44,12 @@ class App extends React.Component {
     // fetch the scores from mongolab
     this.getAllScores();
     this.getCohortList();
-    this.setState({
-      'score': 0,
-      'highlighted': null,
-      'highlightedKey': null,
-    });
+    // this.setState({
+    //   'score': 0,
+    //   'highlighted': null,
+    //   'highlightedKey': null,
+    // });
   }
-
-  // componentWillReceiveProps( nextProps ) {
-  //   console.log('nextProps', nextProps);
-  //   console.log('event', event, event.which);
-
-  //   const { keydown: { event } } = nextProps;
-  //   if ( event ) {
-  //     this.setState( { key: event.which } );
-  //   }
-  // }
 
   getAllScores(){
     fetch('https://cryptic-temple-42662.herokuapp.com/scores', {
@@ -101,15 +90,13 @@ class App extends React.Component {
   }
 
   preparePeople() {
-    console.log('all cohorts', this.state.allCohorts);
-    console.log('selected cohort', this.state.selectedCohort);
-
     const people = this.state.allCohorts.filter((cohort) => {
-      console.log('cohort name is', cohort.name);
       return cohort.name === this.state.selectedCohort;
-    })[0]['students'];
-    console.log('people are', people);
-    // console.log('students are', people['students']);
+    })[0]['students'].map((studentObj, i) => {
+      const newObj = studentObj; 
+      newObj['number'] = i;
+      return newObj;
+    });
 
     const shuffledPeople = _.shuffle(people);
     
@@ -122,8 +109,41 @@ class App extends React.Component {
       'completed': allNames,
       'shuffledPeople': shuffledPeople,
       'unshuffledPeople': people,
+      'currPerson': shuffledPeople[0],
+    }, () => {
+      console.log('callback called');
+      this.chooseRandom();
     });
-    console.log('completed and shuffled people complete');
+
+
+    console.log('shuffled people arr', shuffledPeople);
+    // console.log('state', this.state.shuffledPeople);
+  }
+
+  chooseRandom() {
+    // choose 4 random numbers -- if already in array choose again
+    var i = 0;
+    var randos = []; 
+    console.log('shuffled', this.state.shuffledPeople);
+    console.log('while statements', i < 4, randos.length < this.state.shuffledPeople.length - 1);
+    while (i < 4 && randos.length < this.state.shuffledPeople.length - 1) {
+      console.log('called once');
+      var randomNum = Math.round(Math.random() * (this.state.shuffledPeople.length - 1));
+      var randomPerson = this.state.shuffledPeople[randomNum];
+      if (randos.indexOf(randomPerson) === -1 && randomPerson !== this.state.currPerson) {
+        randos.push(randomPerson);
+        i++;
+        console.log('found one rando', randomPerson);
+      }
+    }
+
+    randos.push(this.state.currPerson);
+    randos = _.shuffle(randos);
+    console.log('all randos are', randos);
+
+    this.setState({
+      'randomPeople': randos,
+    });
   }
 
   startGame(e, second){
@@ -135,7 +155,6 @@ class App extends React.Component {
       gameover: false,
     });
     // console.log('after submit', this.state.name);
-    this.componentWillReceiveProps();
   }
 
   gameover(){
@@ -195,14 +214,30 @@ class App extends React.Component {
       currentMatches[draggedName] = true;
       this.setState({
         score: this.state.score + 3,
-        completed: currentMatches
+        completed: currentMatches,
       });
+
+      if (this.state.currPerson.number === this.state.shuffledPeople.length - 1) {
+        // if is the last person, set to gameover
+        this.gameover();
+      } else {
+        // otherwise, set the current person to the next one, 
+        const newPerson = this.state.shuffledPeople[this.state.currPerson.number + 1];
+        this.setState({
+          currPerson: newPerson,
+        }, () => {
+          console.log('choose random called for second time');
+           // call choose random again, and 
+          this.chooseRandom();
+          // rerender
+          this.render();
+        });
+      }
     } 
     // subtract points for wrong guess
   }
 
   selectCohort(event){
-    console.log('calling select cohort', event.target.value);
     this.setState({
       selectedCohort: event.target.value
     });
@@ -298,15 +333,11 @@ class App extends React.Component {
     })
     .then(data => data.json())
     .then((cohortList) => {
-      console.log('cohort list is', cohortList);
 
       this.setState({
         allCohorts: cohortList,
         selectedCohort: cohortList[0]['name'],
       });
-
-      console.log('cohortlist[0][name', cohortList[0]['name']);
-      // this.preparePeople();
     })
     .catch(err => console.log('error getting cohorts', err));
   }
@@ -366,6 +397,10 @@ class App extends React.Component {
     );
   }
 
+  // {
+  //   this.renderUploadOptions()
+  // }
+
   render() {
     return (
       <div>
@@ -379,7 +414,7 @@ class App extends React.Component {
             <div className="outerBox" style={outerBoxStyle}> 
               <div className="leftColumn" style={leftColStyle}>
               {
-                this.state.unshuffledPeople.map((person, i)=> {
+                this.state.randomPeople.map((person, i)=> {
                   return (
                     <DraggableName 
                       key={i} 
@@ -392,18 +427,11 @@ class App extends React.Component {
 
               </div>
               <div className="imgBox" style={imgBoxStyle}>
-              {
-                this.state.shuffledPeople.map((person, i) => {
-                  return (
-                    <img 
-                      onMouseEnter={()=> this.highlight(person.name, i)} 
-                      key={i} 
-                      src={cdnPath + person.image}
-                      style={this.state.completed[person.name] ? solvedStyle : this.state.highlightedKey === i ? highlightStyle : imgStyle}
-                    />
-                  );
-                })
-              }
+                <img 
+                  onMouseEnter={()=> this.highlight(this.state.currPerson.name)} 
+                  src={cdnPath + this.state.currPerson.image}
+                  style={this.state.completed[this.state.currPerson.name] ? solvedStyle : imgStyle}
+                />
               </div>
             </div>
         </div>
