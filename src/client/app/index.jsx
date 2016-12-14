@@ -60,7 +60,7 @@ class App extends React.Component {
     .then((parsedResp) => {
       var newTopScores = [];
       // only take top 50 scores if there are 100 to take
-      for (var i = 0; i < Math.min(50, parsedResp.length); i ++) {
+      for (var i = 0; i < parsedResp.length; i ++) {
         var person = parsedResp[i];
         newTopScores.push({name: person.name, score: person.score});
       }
@@ -69,8 +69,10 @@ class App extends React.Component {
         return b.score - a.score;
       });
 
+      var top50 = newTopScores.slice(0, 50);
+
       this.setState({
-        'topscores': newTopScores,
+        'topscores': top50,
       });
     })
     .catch((err) => {
