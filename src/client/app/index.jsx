@@ -392,16 +392,17 @@ class App extends React.Component {
               })
             }
           </select>
-          <br></br><br></br>
+          <br></br>
           
+          {
+            this.renderLeaderboard()
+          }
+          <br></br>
           <span>Upload cohort </span>
           <input style={inputStyle} type="checkbox" name="showUpload" onChange={this.handleCheckChange}/>
-            {
-              this.state.showUpload ? (this.renderUploadOptions()) : null
-            }
-            {
-              this.renderLeaderboard()
-            }
+          {
+            this.state.showUpload ? (this.renderUploadOptions()) : null
+          }
 
         </form>
       </div>
@@ -424,6 +425,7 @@ class App extends React.Component {
             </div>
             <div className="outerBox" style={outerBoxStyle}> 
               <div className="leftColumn" style={leftColStyle}>
+              <button onClick={this.gameover}>End Game</button>
               {
                 this.state.randomPeople.map((person, i)=> {
                   return (
