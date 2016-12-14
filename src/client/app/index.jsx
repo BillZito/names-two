@@ -3,10 +3,10 @@ import {render} from 'react-dom';
 import lodash from 'lodash';
 import Dropzone from 'react-dropzone';
 import Scoreboard from './scoreboard';
-import DraggableName from './draggableName';
 
 const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/';
 const serverPath = 'http://localhost:5000/';
+// const serverPath = 'https://cryptic-temple-42662.herokuapp.com/';
 
 class App extends React.Component {
   constructor(props){
@@ -14,19 +14,18 @@ class App extends React.Component {
 
     this.state = {
       'score': 0,
-      'highlighted': null,
-      'highlightedKey': null,
-      'completed': '',
-      'shuffledPeople': '',
+      'completed': [],
       'gameover': true,
       'name': '',
-      'topscores': [
-        {'name': 'none', 'score': '0'}
+      'topscores': 
+        [
+          {'name': 'none', 'score': '0'}
         ],
       'cohort': '',
       'selectedCohort': '',
       'allCohorts': [],
       'currPerson': '',
+      'shuffledPeople': [],
       'randomPeople': [],
       'showUpload': false,
     };
@@ -34,8 +33,8 @@ class App extends React.Component {
     this.startGame = this.startGame.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckChange = this.handleCheckChange.bind(this);
+    this.checkTypedAnswer = this.checkTypedAnswer.bind(this);
     this.selectCohort = this.selectCohort.bind(this);
-    this.highlight = this.highlight.bind(this);
     this.gameover = this.gameover.bind(this);
     this.checkName = this.checkName.bind(this);
     this.onDrop = this.onDrop.bind(this);
@@ -46,11 +45,6 @@ class App extends React.Component {
     // fetch the scores from mongolab
     this.getAllScores();
     this.getCohortList();
-    // this.setState({
-    //   'score': 0,
-    //   'highlighted': null,
-    //   'highlightedKey': null,
-    // });
   }
 
   getAllScores(){
@@ -64,8 +58,6 @@ class App extends React.Component {
       return resp.json();
     })
     .then((parsedResp) => {
-      // console.log('parsed', parsedResp);
-
       var newTopScores = [];
       parsedResp.forEach((person) => {
         newTopScores.push({name: person.name, score: person.score});
@@ -97,6 +89,7 @@ class App extends React.Component {
       [event.target.name] : event.target.checked
     });
   }
+
 
   preparePeople() {
     const people = this.state.allCohorts.filter((cohort) => {
@@ -132,22 +125,18 @@ class App extends React.Component {
     // choose 4 random numbers -- if already in array choose again
     var i = 0;
     var randos = []; 
-    console.log('shuffled', this.state.shuffledPeople);
-    console.log('while statements', i < 4, randos.length < this.state.shuffledPeople.length - 1);
+
     while (i < 4 && randos.length < this.state.shuffledPeople.length - 1) {
-      console.log('called once');
       var randomNum = Math.round(Math.random() * (this.state.shuffledPeople.length - 1));
       var randomPerson = this.state.shuffledPeople[randomNum];
       if (randos.indexOf(randomPerson) === -1 && randomPerson !== this.state.currPerson) {
         randos.push(randomPerson);
         i++;
-        console.log('found one rando', randomPerson);
       }
     }
 
     randos.push(this.state.currPerson);
     randos = _.shuffle(randos);
-    console.log('all randos are', randos);
 
     this.setState({
       'randomPeople': randos,
@@ -155,18 +144,15 @@ class App extends React.Component {
   }
 
   startGame(e, second){
-    // console.log('e is', e);
     e.preventDefault();
 
     this.preparePeople();
     this.setState({
       gameover: false,
     });
-    // console.log('after submit', this.state.name);
   }
 
   gameover(){
-    // console.log('top game ended');
     fetch('https://cryptic-temple-42662.herokuapp.com/addscore', {
       method: 'POST',
       body: JSON.stringify({
@@ -206,20 +192,17 @@ class App extends React.Component {
     });
   }
 
-  highlight(name, i){
-    this.setState({
-      'highlighted': name,
-      'highlightedKey': i
-    });
+  checkTypedAnswer(event) {
+    console.log('val', event.target.value);
+    this.checkName(event.target.value);
   }
 
-
-  checkName(draggedName){
-    console.log('dragged Name is', draggedName);
-    if (draggedName === this.state.highlighted) {
-      console.log('matches!');
+  checkName(clickedName){
+    console.log('curr person is', this.state.currPerson.name);
+    
+    if (clickedName === this.state.currPerson.name) {
       var currentMatches = this.state.completed;
-      currentMatches[draggedName] = true;
+      currentMatches[clickedName] = true;
       this.setState({
         score: this.state.score + 3,
         completed: currentMatches,
@@ -237,7 +220,7 @@ class App extends React.Component {
           console.log('choose random called for second time');
            // call choose random again, and 
           this.chooseRandom();
-          // rerender
+          // rerender -- need this?
           this.render();
         });
       }
@@ -320,7 +303,7 @@ class App extends React.Component {
   }
 
   getOnePhoto(file) {
-    return fetch('http://localhost:5000/s3/sign', {
+    return fetch(serverPath + 's3/sign', {
       method: 'POST',
       body: JSON.stringify({
         filename: file.name,
@@ -409,10 +392,6 @@ class App extends React.Component {
     );
   }
 
-  // {
-  //   this.renderUploadOptions()
-  // }
-
   render() {
     return (
       <div>
@@ -422,26 +401,31 @@ class App extends React.Component {
               <br></br>
               <Scoreboard score={this.state.score} gameover={this.gameover} name={this.state.name}/>
               <br></br>
+              <button style={endButtonStyle} onClick={this.gameover}>End Practice</button>
             </div>
             <div className="outerBox" style={outerBoxStyle}> 
               <div className="leftColumn" style={leftColStyle}>
-              <button onClick={this.gameover}>End Game</button>
               {
                 this.state.randomPeople.map((person, i)=> {
                   return (
-                    <DraggableName 
-                      key={i} 
-                      name={person.name} 
-                      checkName={()=> this.checkName(person.name)} 
-                      completed={this.state.completed[person.name]}/>
+                    <div>
+                      <button 
+                        key={i} 
+                        name={person.name} 
+                        onClick={() => this.checkName(person.name)}
+                        completed={this.state.completed[person.name]}
+                      > {person.name}
+                      </button>
+                    </div>
                   );
                 })
               }
+              Answer: 
+              <input name="typedAnswer" onChange={this.checkTypedAnswer}/>
 
               </div>
               <div className="imgBox" style={imgBoxStyle}>
                 <img 
-                  onMouseEnter={()=> this.highlight(this.state.currPerson.name)} 
                   src={cdnPath + this.state.currPerson.image}
                   style={this.state.completed[this.state.currPerson.name] ? solvedStyle : imgStyle}
                 />
@@ -501,13 +485,6 @@ const imgStyle = {
   opacity: '0.7'
 };
 
-const highlightStyle = {
-  height: '150px',
-  width: '150px',
-  margin: '5px',
-  borderRadius: '3px',
-};
-
 const solvedStyle = {
   display: 'none'
 };
@@ -543,6 +520,11 @@ const scoreStyle = {
 const leaderboardStyle = {
   fontSize: '20px',
   textDecoration: 'underline',
+};
+
+const endButtonStyle = {
+  width: '60px',
+  margin: '5px'
 };
 
 render(<App />, document.getElementById('app'));

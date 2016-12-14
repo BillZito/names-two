@@ -18,15 +18,8 @@ class Clock extends React.Component{
 
   start(){
     var currDate = new Date(); 
-    var currSeconds = currDate.getSeconds();
-    var currMinutes = currDate.getMinutes();
-    var pastSeconds = this.state.startTime.getSeconds();
-    var pastMin = this.state.startTime.getMinutes();
-    var secondsElapsed = (currMinutes - pastMin) * 60 + currSeconds - pastSeconds;
+    var secondsElapsed = Math.floor((currDate - this.state.startTime)/1000);
 
-    // console.log('elapsed', secondsElapsed);
-    // console.log('end after', this.state.timeGone);
-    // var secondsElapsed = currDate.getSeconds();
     var tick = () => {
       this.setState({
         timeGone: secondsElapsed

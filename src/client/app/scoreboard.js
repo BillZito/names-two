@@ -10,11 +10,11 @@ class Scoreboard extends React.Component{
     return (
       <div>
         <div style={directStyle}>
-          <span> Directions: Drag names onto their corresponding pictures, and you'll get points! </span>
+          <span> Directions: Click the name of the correct person </span>
         </div>
         <div>
           <span style={scoreboardStyle}> Points: {this.props.score} </span>
-          <span style={pumpupStyle}> {coolPhrases[this.props.score % 10]} </span>
+          <span style={pumpupStyle}> Note: {coolPhrases[this.props.score % 10]} </span>
         </div>
         <div style={moreInfoStyle}>
           <Clock style={clockStyle} endAfter={100} gameover={this.props.gameover.bind(this)}/>
