@@ -6,12 +6,12 @@ var resize = require('im-resize');
 var fs = require('fs');
 
 // uncomment to make small versions of all photos
-// const photoFolder = '/Users/billzito/Downloads/53/';
+// const photoFolder = '/Users/billzito/Downloads/HRSF72/';
 // fs.readdir(photoFolder, (err, files) => {
 //   // console.log(files[1].replace(' ', '\\ '));
   
 //   files.forEach( (file, i) => {
-//     if (i > 30 && i < 32) {
+//     if (i >= 10 && i < 20) {
 //       makeSmallPhoto(file.replace(' ', '\\ '));
 //     }
 //   });
@@ -26,7 +26,7 @@ var fs = require('fs');
 //   };
 
 //   var output = {
-//     path: '/Users/billzito/Documents/53',
+//     path: '/Users/billzito/Downloads/HRSF72_resized/',
 //     versions: [
 //     {
 //       maxWidth: 250,
@@ -43,6 +43,10 @@ var fs = require('fs');
 //   });
 // };
 // need double back slash to have one at the end
+// edge case: doesn't work for someone with multiple names:
+// easy way: hardcode answer. better way: replace all spaces, not first
+// edge case: only works for first 10. 
+// easy case: manually iterate. better way: promisify makeSmallPhoto and promise loop
 
 
 
