@@ -6,7 +6,7 @@ import Scoreboard from './scoreboard';
 
 const cdnPath = 'https://s3-us-west-1.amazonaws.com/invalidmemories/';
 // const serverPath = 'http://localhost:5000/';
-const serverPath = 'https://cryptic-temple-42662.herokuapp.com/';
+const serverPath = 'https://hr-names.herokuapp.com/';
 
 class App extends React.Component {
   constructor(props){
