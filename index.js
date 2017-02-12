@@ -111,7 +111,7 @@ app.get('/scores', function(req, res) {
 app.post('/addscore', function(req, res) {
   console.log('request body is', req.body);
   var incoming = req.body;
-  if (incoming.score > 120 || typeof incoming.score !== 'number') {
+  if (incoming.score > 150 || typeof incoming.score !== 'number') {
     res.status(404).send('c\'mon bud');
   } else {
 

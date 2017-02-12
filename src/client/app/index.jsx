@@ -359,8 +359,12 @@ class App extends React.Component {
         <div style={scoreStyle}> </div>
         <p> Your last score: {this.state.score} </p>
         <div style={leaderboardStyle}> Hall of fame: </div>
-          <div> HR48: Amad </div>
+          <div> HRSF72: Eddie, Edwin, Shastry, Colby, Billy </div>
+          <div> HR53: Danilo  </div>
+          <div> HR52: Fred, Sia, Ranit, Sunnie, Mike </div>
           <div> HR50: Chan </div>
+          <div> HR48: Amad </div>
+          <div> Staff: Erik, Oleg </div>
         <br></br>
         <div style={leaderboardStyle}> Top scores: </div>
         {this.state.topscores.map((person, i)=> {
