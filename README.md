@@ -1,3 +1,3 @@
-#Know your floor#
+# Name game #
 
-Helping people figure out each other's names
+Guess the names of people from your class
